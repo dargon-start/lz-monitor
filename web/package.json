@@ -1,0 +1,55 @@
+{
+  "name": "lz-react-template",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "eslint": "pnpm dlx eslint src/** --fix",
+    "prettier": "pnpm exec prettier . --write"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^6.0.0",
+    "@ant-design/v5-patch-for-react-19": "^1.0.3",
+    "@ant-design/x": "^1.4.0",
+    "@faker-js/faker": "^9.8.0",
+    "@types/node": "^22.14.1",
+    "ahooks": "^3.8.5",
+    "antd": "^5.24.7",
+    "axios": "^1.9.0",
+    "framer-motion": "^12.10.4",
+    "msw": "^2.8.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
+    "react-router": "^7.5.1",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.24.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react-swc": "^3.8.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.25.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "postcss": "^8.5.3",
+    "prettier": "3.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.30.1",
+    "vite": "^6.3.1"
+  },
+  "packageManager": "pnpm@9.9.0+sha512.60c18acd138bff695d339be6ad13f7e936eea6745660d4cc4a776d5247c540d0edee1a563695c183a66eb917ef88f2b4feb1fc25f32a7adcadc7aaf3438e99c1",
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
+}
