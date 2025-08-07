@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>  
+  <script>
+    try {
+      new Promise((resolve, reject) => {
+        JSON.parse('');
+        resolve();
+      });
+    } catch (err) {
+      // try/catch 不能捕获Promise中错误 ❌
+      console.error('in try catch', err);
+    }
+
+    window.addEventListener('unhandledrejection', (event) => {
+      // 捕获未处理的Promise错误 ✅
+      console.log('in unhandledrejection', event.reason);
+    });
+  </script>
+</body>
+</html>
