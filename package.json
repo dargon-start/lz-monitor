@@ -1,0 +1,20 @@
+{
+  "name": "lz-monitor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@9.9.0+sha512.60c18acd138bff695d339be6ad13f7e936eea6745660d4cc4a776d5247c540d0edee1a563695c183a66eb917ef88f2b4feb1fc25f32a7adcadc7aaf3438e99c1",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "rollup": "^4.46.2",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.9.2"
+  }
+}
