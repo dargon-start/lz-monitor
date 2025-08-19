@@ -11,5 +11,10 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^24.2.0"
+  },
+  "dependencies": {
+    "@lz-monitor/common": "workspace:^",
+    "@lz-monitor/types": "workspace:^",
+    "error-stack-parser": "^2.1.4"
   }
 }

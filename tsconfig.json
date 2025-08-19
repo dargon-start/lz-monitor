@@ -1,0 +1,37 @@
+{
+  "include": ["global.d.ts", "packages", "types", "test"],
+  "compilerOptions": {
+    // 模块和目标配置
+    "target": "es5",
+    "module": "esnext",
+    "lib": ["dom", "esnext"],
+    "moduleResolution": "node",
+    // 声明文件
+    "declaration": true,
+    "sourceMap": true,
+    "importHelpers": true,
+    // 严格类型检查
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    // 额外检查
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    // 路径解析
+    "baseUrl": "./",
+    "paths": {
+      "*": ["src/*", "node_modules/*"],
+      "@lz-monitor/*":["packages/*/src"],
+    },
+    // 其他配置
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "esModuleInterop": true
+  }
+}

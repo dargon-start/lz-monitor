@@ -7,20 +7,21 @@
 </head>
 <body>  
   <script>
-    try {
-      new Promise((resolve, reject) => {
-        JSON.parse('');
-        resolve();
-      });
-    } catch (err) {
-      // try/catch 不能捕获Promise中错误 ❌
-      console.error('in try catch', err);
+
+    const data = {
+      name: 'lz-monitor',
+      // list: "[\"53JX20250808000003\",\"53JX20250808000004\"]",
+      age:["123","32132"]
     }
 
-    window.addEventListener('unhandledrejection', (event) => {
-      // 捕获未处理的Promise错误 ✅
-      console.log('in unhandledrejection', event.reason);
-    });
+    const str = JSON.stringify(data);
+    const obj = JSON.parse(str);
+
+    console.log(JSON.stringify(str));
+    console.log('====================================');
+    console.log(obj);
+    console.log('====================================');
+    
   </script>
 </body>
 </html>
