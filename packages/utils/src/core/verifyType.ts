@@ -3,6 +3,7 @@ function isType(type: any) {
     return Object.prototype.toString.call(value) === `[object ${type}]`;
   };
 }
+
 /**
  * 检测变量类型
  * @param type
@@ -18,7 +19,7 @@ export const variableTypeDetection = {
   isObject: isType('Object'),
   isArray: isType('Array'),
   isProcess: isType('process'),
-  isWindow: isType('Window'),
+  isWindow: isType('Window')
 };
 
 export function isError(error: Error): boolean {
@@ -39,6 +40,7 @@ export function isError(error: Error): boolean {
 export function isEmptyObject(obj: object): boolean {
   return variableTypeDetection.isObject(obj) && Object.keys(obj).length === 0;
 }
+
 export function isEmpty(wat: any): boolean {
   return (
     (variableTypeDetection.isString(wat) && wat.trim() === '') || wat === undefined || wat === null

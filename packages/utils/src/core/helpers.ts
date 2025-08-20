@@ -20,22 +20,18 @@ export function typeofAny(target: unknown): string {
 }
 
 // 检验参数类型
-export function validateOption(
-  target: any, 
-  targetName: string, 
-  expectType: string
-): boolean {
+export function validateOption(target: any, targetName: string, expectType: string): boolean {
   // 更精确的空值检查
   if (target === null || target === undefined) {
     console.error(`lz-monitor: ${targetName} 不能为 null 或 undefined`);
     return false;
   }
-  
+
   const actualType = typeofAny(target);
   if (actualType === expectType) {
     return true;
   }
-  
+
   console.error(`lz-monitor: ${targetName} 期望传入 ${expectType} 类型，目前是 ${actualType} 类型`);
   return false;
 }

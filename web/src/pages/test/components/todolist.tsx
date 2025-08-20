@@ -1,43 +1,43 @@
-import React, { useState } from 'react'
-import { Input, Button, List, Checkbox, Space, message } from 'antd'
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
+import React, { useState } from 'react';
+import { Input, Button, List, Checkbox, Space, message } from 'antd';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 
 interface TodoItem {
-  id: string
-  text: string
-  completed: boolean
+  id: string;
+  text: string;
+  completed: boolean;
 }
 
 const TodoList: React.FC = () => {
-  const [todos, setTodos] = useState<TodoItem[]>([])
-  const [inputValue, setInputValue] = useState('')
+  const [todos, setTodos] = useState<TodoItem[]>([]);
+  const [inputValue, setInputValue] = useState('');
 
   // 添加新待办事项
   const addTodo = () => {
     if (inputValue.trim() === '') {
-      message.warning('请输入待办事项内容')
-      return
+      message.warning('请输入待办事项内容');
+      return;
     }
 
     const newTodo: TodoItem = {
       id: Date.now().toString(),
       text: inputValue,
-      completed: false
-    }
+      completed: false,
+    };
 
-    setTodos([...todos, newTodo])
-    setInputValue('')
-  }
+    setTodos([...todos, newTodo]);
+    setInputValue('');
+  };
 
   // 切换待办事项完成状态
   const toggleTodo = (id: string) => {
-    setTodos(todos.map(todo => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)))
-  }
+    setTodos(todos.map(todo => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)));
+  };
 
   // 删除待办事项
   const deleteTodo = (id: string) => {
-    setTodos(todos.filter(todo => todo.id !== id))
-  }
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '24px' }}>
@@ -48,10 +48,10 @@ const TodoList: React.FC = () => {
         <Input
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
-          placeholder='输入待办事项...'
+          placeholder="输入待办事项..."
           onPressEnter={addTodo}
         />
-        <Button type='primary' icon={<PlusOutlined />} onClick={addTodo}>
+        <Button type="primary" icon={<PlusOutlined />} onClick={addTodo}>
           添加
         </Button>
       </Space.Compact>
@@ -62,21 +62,14 @@ const TodoList: React.FC = () => {
         dataSource={todos}
         renderItem={todo => (
           <List.Item
-            actions={[
-              <Button
-                type='text'
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => deleteTodo(todo.id)}
-              />
-            ]}
+            actions={[<Button type="text" danger icon={<DeleteOutlined />} onClick={() => deleteTodo(todo.id)} />]}
           >
             <Space>
               <Checkbox checked={todo.completed} onChange={() => toggleTodo(todo.id)} />
               <span
                 style={{
                   textDecoration: todo.completed ? 'line-through' : 'none',
-                  color: todo.completed ? '#999' : '#333'
+                  color: todo.completed ? '#999' : '#333',
                 }}
               >
                 {todo.text}
@@ -94,7 +87,7 @@ const TodoList: React.FC = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default TodoList
+export default TodoList;

@@ -1,60 +1,60 @@
-import { memo, useEffect, useState } from 'react'
-import { Table, Tag } from 'antd'
-import { getOrgList } from '@/api/user-management'
-import type { Organization } from '@/api/user-management/org.type'
+import { memo, useEffect, useState } from 'react';
+import { Table, Tag } from 'antd';
+import { getOrgList } from '@/api/user-management';
+import type { Organization } from '@/api/user-management/org.type';
 interface dataType extends Organization {
-  key: React.ReactNode
+  key: React.ReactNode;
 }
 
 interface UserProps {}
 
 export default memo(function index({}: UserProps) {
-  const [data, setData] = useState<dataType[]>([])
-  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState<dataType[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
+      setLoading(true);
       const res = await getOrgList({}).finally(() => {
-        setLoading(false)
-      })
-      console.log(res)
+        setLoading(false);
+      });
+      console.log(res);
       const data = res.map(item => ({
         ...item,
-        key: item.id
-      }))
-      setData(data)
-    }
+        key: item.id,
+      }));
+      setData(data);
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   const columns = [
     {
       title: 'ID',
-      dataIndex: 'id'
+      dataIndex: 'id',
     },
     {
       title: 'Name',
-      dataIndex: 'name'
+      dataIndex: 'name',
     },
     {
       title: 'Status',
       dataIndex: 'status',
       render: (status: string) => {
-        return <Tag color={status === 'enable' ? 'success' : 'error'}>{status}</Tag>
-      }
+        return <Tag color={status === 'enable' ? 'success' : 'error'}>{status}</Tag>;
+      },
     },
     {
       title: 'Description',
-      dataIndex: 'desc'
-    }
-  ]
+      dataIndex: 'desc',
+    },
+  ];
 
   return (
     <>
-      <div className='text-primary text-base hover:text-primary-hover'>用户列表</div>
+      <div className="text-primary text-base hover:text-primary-hover">用户列表</div>
       <Table<dataType> columns={columns} dataSource={data} loading={loading} />
     </>
-  )
-})
+  );
+});

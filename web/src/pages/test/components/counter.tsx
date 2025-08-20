@@ -1,21 +1,21 @@
-import React, { useState } from 'react'
-import { Button } from 'antd'
+import React, { useState } from 'react';
+import { Button } from 'antd';
 
 interface CounterProps {
-  initialValue?: number
-  step?: number
+  initialValue?: number;
+  step?: number;
 }
 
 const Counter: React.FC<CounterProps> = ({ initialValue = 0, step = 1 }) => {
-  const [count, setCount] = useState<number>(initialValue)
+  const [count, setCount] = useState<number>(initialValue);
 
   const increment = () => {
-    setCount(prevCount => prevCount + step)
-  }
+    setCount(prevCount => prevCount + step);
+  };
 
   const decrement = () => {
-    setCount(prevCount => Math.max(0, prevCount - step))
-  }
+    setCount(prevCount => Math.max(0, prevCount - step));
+  };
 
   return (
     <div>
@@ -29,7 +29,7 @@ const Counter: React.FC<CounterProps> = ({ initialValue = 0, step = 1 }) => {
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Counter
+export default Counter;

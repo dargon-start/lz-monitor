@@ -1,1 +1,1 @@
-export * from './settingStore'
+export * from './settingStore';

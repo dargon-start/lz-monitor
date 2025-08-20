@@ -1,1 +1,1 @@
-export { getOrgList } from './org'
+export { getOrgList } from './org';

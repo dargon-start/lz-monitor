@@ -1,15 +1,16 @@
-/* 
+/*
   用户行为栈
 */
 
 import { BREADCRUMBTYPES, EVENTTYPES } from '@lz-monitor/common';
-import { BreadcrumbData } from '@lz-monitor/types';
-import { _support, getTimestamp } from '@lz-monitor/utils';
+import { BreadcrumbData, InitOptions } from '@lz-monitor/types';
+import { _support, getTimestamp, validateOption } from '@lz-monitor/utils';
 
 export class Breadcrumb {
   maxBreadcrumbs = 20; // 用户行为存放的最大长度
   beforePushBreadcrumb: unknown = null;
   stack: BreadcrumbData[];
+
   constructor() {
     this.stack = [];
   }
@@ -76,6 +77,16 @@ export class Breadcrumb {
       default:
         return BREADCRUMBTYPES.CUSTOM;
     }
+  }
+
+  bindOptions(options: InitOptions): void {
+    // maxBreadcrumbs 用户行为存放的最大容量
+    // beforePushBreadcrumb 添加用户行为前的处理函数
+    const { maxBreadcrumbs, beforePushBreadcrumb } = options;
+    validateOption(maxBreadcrumbs, 'maxBreadcrumbs', 'number') &&
+      (this.maxBreadcrumbs = maxBreadcrumbs || 20);
+    validateOption(beforePushBreadcrumb, 'beforePushBreadcrumb', 'function') &&
+      (this.beforePushBreadcrumb = beforePushBreadcrumb);
   }
 }
 

@@ -1,5 +1,5 @@
-import Router from '@/router/index.tsx'
-import ThemeProvider from '@/theme/ThemeProvider'
+import Router from '@/router/index.tsx';
+import ThemeProvider from '@/theme/ThemeProvider';
 function App() {
   return (
     <>
@@ -7,7 +7,7 @@ function App() {
         <Router></Router>
       </ThemeProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

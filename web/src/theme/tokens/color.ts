@@ -1,4 +1,4 @@
-import { ThemeColorPresets } from '#/enum'
+import { ThemeColorPresets } from '#/enum';
 
 export const presetsColors = {
   [ThemeColorPresets.Default]: '#00A76F',
@@ -6,5 +6,5 @@ export const presetsColors = {
   [ThemeColorPresets.Purple]: '#7635DC',
   [ThemeColorPresets.Blue]: '#2065D1',
   [ThemeColorPresets.Orange]: '#FDA92D',
-  [ThemeColorPresets.Red]: '#FF3030'
-}
+  [ThemeColorPresets.Red]: '#FF3030',
+};

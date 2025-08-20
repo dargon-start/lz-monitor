@@ -1,9 +1,9 @@
-import { lazy } from 'react'
-import { UserOutlined } from '@ant-design/icons'
-import DashboardLayout from '@/layouts/index'
+import { lazy } from 'react';
+import { UserOutlined } from '@ant-design/icons';
+import DashboardLayout from '@/layouts/index';
 
-const User = lazy(() => import('@/pages/user-management/user'))
-const Role = lazy(() => import('@/pages/user-management/role'))
+const User = lazy(() => import('@/pages/user-management/user'));
+const Role = lazy(() => import('@/pages/user-management/role'));
 
 export default {
   path: '/user-management',
@@ -11,7 +11,7 @@ export default {
   meta: {
     label: '用户管理',
     icon: <UserOutlined />,
-    key: '/user-management'
+    key: '/user-management',
   },
   children: [
     {
@@ -19,16 +19,16 @@ export default {
       element: <User></User>,
       meta: {
         label: '用户列表',
-        key: '/user-management/user'
-      }
+        key: '/user-management/user',
+      },
     },
     {
       path: 'role',
       element: <Role></Role>,
       meta: {
         label: '角色列表',
-        key: '/user-management/role'
-      }
-    }
-  ]
-}
+        key: '/user-management/role',
+      },
+    },
+  ],
+};

@@ -1,11 +1,16 @@
 {
   "semi": true,
-  "trailingComma": "es5",
+  "trailingComma": "none",
   "singleQuote": true,
-  "printWidth": 120,
+  "printWidth": 100,
   "tabWidth": 2,
   "useTabs": false,
   "bracketSpacing": true,
   "arrowParens": "avoid",
-  "endOfLine": "lf"
+  "endOfLine": "auto",
+  "insertPragma": false,
+  "proseWrap": "preserve",
+  "requirePragma": false,
+  "htmlWhitespaceSensitivity": "css",
+  "embeddedLanguageFormatting": "auto"
 }

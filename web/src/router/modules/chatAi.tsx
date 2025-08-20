@@ -1,8 +1,8 @@
-import { lazy } from 'react'
-import { UserOutlined } from '@ant-design/icons'
-import DashboardLayout from '@/layouts/index'
+import { lazy } from 'react';
+import { UserOutlined } from '@ant-design/icons';
+import DashboardLayout from '@/layouts/index';
 
-const ChatAI = lazy(() => import('@/pages/chat-ai'))
+const ChatAI = lazy(() => import('@/pages/chat-ai'));
 
 export default {
   path: '/ai',
@@ -10,7 +10,7 @@ export default {
   meta: {
     label: 'AI',
     icon: <UserOutlined />,
-    key: '/ai'
+    key: '/ai',
   },
   children: [
     {
@@ -18,8 +18,8 @@ export default {
       element: <ChatAI></ChatAI>,
       meta: {
         label: 'Chat',
-        key: '/ai/chat-ai'
-      }
-    }
-  ]
-}
+        key: '/ai/chat-ai',
+      },
+    },
+  ],
+};

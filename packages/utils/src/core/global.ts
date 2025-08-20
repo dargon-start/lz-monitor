@@ -23,7 +23,7 @@ _support.deviceInfo = {
   os: uaResult.os.name, // Windows
   ua: uaResult.ua,
   device: uaResult.device.model ? uaResult.device.model : 'Unknow',
-  device_type: uaResult.device.type ? uaResult.device.type : 'Pc',
+  device_type: uaResult.device.type ? uaResult.device.type : 'Pc'
 };
 
 _support.hasError = false;
@@ -45,14 +45,12 @@ export function getGlobalSupport() {
   _global.__monitor__ = _global.__monitor__ || ({} as Monitor);
   return _global.__monitor__;
 }
-export function supportsHistory(): boolean {
-  const chrome = _global.chrome;
-  const isChromePackagedApp = chrome && chrome.app && chrome.app.runtime;
-  const hasHistoryApi =
-    'history' in _global &&
-    !!(_global.history as History).pushState &&
-    !!(_global.history as History).replaceState;
-  return !isChromePackagedApp && hasHistoryApi;
-}
+// export function supportsHistory(): boolean {
+//   const chrome = _global.chrome;
+//   const isChromePackagedApp = chrome && chrome.app && chrome.app.runtime;
+//   const hasHistoryApi =
+//     'history' in _global && !!(_global.history as History).pushState && !!(_global.history as History).replaceState;
+//   return !isChromePackagedApp && hasHistoryApi;
+// }
 
 export { _global, _support };

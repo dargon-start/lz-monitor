@@ -1,4 +1,4 @@
-import usePathname from './usePathname'
-import useRouteToMenu from './useRouteToMenu'
+import usePathname from './usePathname';
+import useRouteToMenu from './useRouteToMenu';
 
-export { usePathname, useRouteToMenu }
+export { usePathname, useRouteToMenu };

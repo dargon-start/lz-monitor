@@ -1,14 +1,14 @@
-import { theme } from 'antd'
+import { theme } from 'antd';
 
-const { useToken } = theme
+const { useToken } = theme;
 export default function CssTheme() {
-  let { token } = useToken()
-  console.log(token, 'token')
+  let { token } = useToken();
+  console.log(token, 'token');
 
   const globalVars = `html {
     --ant-color-primary: ${token.colorPrimary};
     --ant-color-primary-hover: ${token.colorPrimaryHover};
     --ant-color-border: ${token.colorBorder};
-  }`
-  return <style>{globalVars}</style>
+  }`;
+  return <style>{globalVars}</style>;
 }

@@ -1,7 +1,7 @@
-import { memo } from 'react'
+import { memo } from 'react';
 
 interface RoleProps {}
 
 export default memo(function index({}: RoleProps) {
-  return <>role</>
-})
+  return <>role</>;
+});

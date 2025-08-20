@@ -1,20 +1,20 @@
 import {
-  Controller,
-  Post,
-  UseInterceptors,
-  UploadedFile,
-  Get,
-  Res,
-  Query,
-  StreamableFile,
   Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Res,
+  StreamableFile,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import { createReadStream, existsSync } from 'fs';
-import { join } from 'path';
-import archiver from 'archiver';
-import { UploadService } from './upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
+import archiver from 'archiver';
+import { createReadStream, existsSync } from 'fs';
+import { join } from 'path';
+import { UploadService } from './upload.service';
 
 @Controller('upload')
 @ApiTags('附件')
