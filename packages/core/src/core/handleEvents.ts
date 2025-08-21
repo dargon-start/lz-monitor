@@ -1,8 +1,11 @@
 import { EVENTTYPES, STATUS_CODE } from '@lz-monitor/common';
 import { ErrorTarget } from '@lz-monitor/types';
-import { getErrorUid, getTimestamp } from '@lz-monitor/utils';
+import { getErrorUid, getTimestamp, hashMapExist } from '@lz-monitor/utils';
 import ErrorStackParser from 'error-stack-parser';
 import { breadcrumb } from './breadcrumb';
+import { options } from './options';
+import { transportData } from './reportData';
+import { resourceTransform } from './transformData';
 
 const HandleEvents = {
   // 处理错误
@@ -66,4 +69,4 @@ const HandleEvents = {
   handleWhiteScreen() {}
 };
 
-export default HandleEvents;
+export { HandleEvents };

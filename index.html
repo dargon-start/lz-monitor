@@ -1,27 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>  
-  <script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function generateUUID() {
+        let d = new Date().getTime();
+        const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+          const r = (d + Math.random() * 16) % 16 | 0;
 
-    const data = {
-      name: 'lz-monitor',
-      // list: "[\"53JX20250808000003\",\"53JX20250808000004\"]",
-      age:["123","32132"]
-    }
+          console.log(d, r);
 
-    const str = JSON.stringify(data);
-    const obj = JSON.parse(str);
+          d = Math.floor(d / 16);
+          return (c == 'x' ? r : (r & 0x3) | 0x8).toString(16);
+        });
+        return uuid;
+      }
 
-    console.log(JSON.stringify(str));
-    console.log('====================================');
-    console.log(obj);
-    console.log('====================================');
-    
-  </script>
-</body>
+      const uuid = generateUUID();
+    </script>
+  </body>
 </html>
