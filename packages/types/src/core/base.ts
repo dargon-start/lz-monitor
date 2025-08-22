@@ -1,4 +1,4 @@
-import { BREADCRUMBTYPES, EVENTTYPES, STATUS_CODE } from '@websee/common';
+import { BREADCRUMBTYPES, EVENTTYPES, STATUS_CODE } from '@lz-monitor/common';
 
 // Without将T中不包含U的属性 设置为可选属性
 export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
@@ -115,7 +115,7 @@ export interface ReportData
   pageUrl: string; // 页面地址
   time: number; // 发生时间
   uuid: string; // 页面唯一标识
-  apikey: string; // 项目id
+  apiKey: string; // 项目id
   status: string; // 事件状态
   sdkVersion: string; // 版本信息
   breadcrumb?: BreadcrumbData[]; // 用户行为
@@ -156,7 +156,7 @@ export interface ResourceTarget {
 
 // 通用信息
 export interface AuthInfo {
-  apikey: string;
+  apiKey: string;
   sdkVersion: string;
   userId?: string;
 }
@@ -182,7 +182,9 @@ export interface RouteHistory {
   to: string;
 }
 
-export interface WebSee {
+export interface Monitor {
+  breadcrumb: import('d:/myProjects/lz-monitor/packages/core/src/core/breadcrumb').Breadcrumb;
+  errorMap: Map<any, any>;
   hasError: false; // 某段时间代码是否报错
   events: string[]; // 存储录屏的信息
   recordScreenId: string; // 本次录屏的id
@@ -219,7 +221,7 @@ export interface Window {
   innerHeight: any;
   onpopstate: any;
   performance: any;
-  __webSee__: {
+  _monitor_: {
     [key: string]: any;
   };
 }

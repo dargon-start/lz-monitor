@@ -1,5 +1,5 @@
 import { EVENTTYPES, STATUS_CODE } from '@lz-monitor/common';
-import { ErrorTarget } from '@lz-monitor/types';
+import { ErrorTarget, HttpData, RouteHistory } from '@lz-monitor/types';
 import { getErrorUid, getTimestamp, hashMapExist } from '@lz-monitor/utils';
 import ErrorStackParser from 'error-stack-parser';
 import { breadcrumb } from './breadcrumb';
@@ -60,10 +60,12 @@ const HandleEvents = {
       });
     }
   },
-  handleHttp() {},
-  handleHistory() {},
-  handleHashchange() {},
-  handleUnhandleRejection() {
+  handleHttp(data: HttpData, type: EVENTTYPES) {
+    console.log('HTTP Error occurred:', data);
+  },
+  handleHistory(data: RouteHistory) {},
+  handleHashchange(data: HashChangeEvent) {},
+  handleUnhandleRejection(event: PromiseRejectionEvent) {
     console.log('Unhandled Rejection');
   },
   handleWhiteScreen() {}

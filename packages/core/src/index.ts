@@ -1,11 +1,21 @@
 import { EVENTTYPES, SDK_NAME, SDK_VERSION } from '@lz-monitor/common';
 import { InitOptions, ViewModel, VueInstance } from '@lz-monitor/types';
 import { _global, getFlag, nativeTryCatch, setFlag } from '@lz-monitor/utils';
-import { breadcrumb, HandleEvents, handleOptions, options, transportData } from './core/index';
+import {
+  breadcrumb,
+  HandleEvents,
+  handleOptions,
+  log,
+  notify,
+  options,
+  setupReplace,
+  subscribeEvent,
+  transportData
+} from './core/index';
 
 function init(options: InitOptions) {
-  if (!options.dsn || !options.apikey) {
-    return console.error(`web-see 缺少必须配置项：${!options.dsn ? 'dsn' : 'apikey'} `);
+  if (!options.dsn || !options.apiKey) {
+    return console.error(`web-see 缺少必须配置项：${!options.dsn ? 'dsn' : 'apiKey'} `);
   }
   if (!('fetch' in _global) || options.disabled) return;
   // 初始化配置

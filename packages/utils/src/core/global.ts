@@ -17,7 +17,7 @@ const uaResult = new UAParser().getResult();
 
 // 获取设备信息
 _support.deviceInfo = {
-  browserVersion: uaResult.browser.version, // // 浏览器版本号 107.0.0.0
+  browserVersion: uaResult.browser.version, // 浏览器版本号 107.0.0.0
   browser: uaResult.browser.name, // 浏览器类型 Chrome
   osVersion: uaResult.os.version, // 操作系统 电脑系统 10
   os: uaResult.os.name, // Windows
@@ -26,7 +26,7 @@ _support.deviceInfo = {
   device_type: uaResult.device.type ? uaResult.device.type : 'Pc'
 };
 
-_support.hasError = false;
+_support.hasError = false; // 是否有代码错误
 
 // errorMap 存储代码错误的集合
 _support.errorMap = new Map();
@@ -42,15 +42,17 @@ export function getFlag(replaceType: string) {
 }
 // 获取全部变量__monitor__的引用地址
 export function getGlobalSupport() {
-  _global.__monitor__ = _global.__monitor__ || ({} as Monitor);
-  return _global.__monitor__;
+  _global._monitor_ = _global._monitor_ || ({} as Monitor);
+  return _global._monitor_;
 }
-// export function supportsHistory(): boolean {
-//   const chrome = _global.chrome;
-//   const isChromePackagedApp = chrome && chrome.app && chrome.app.runtime;
-//   const hasHistoryApi =
-//     'history' in _global && !!(_global.history as History).pushState && !!(_global.history as History).replaceState;
-//   return !isChromePackagedApp && hasHistoryApi;
-// }
+export function supportsHistory(): boolean {
+  const chrome = _global.chrome;
+  const isChromePackagedApp = chrome && chrome.app && chrome.app.runtime;
+  const hasHistoryApi =
+    'history' in _global &&
+    !!(_global.history as History).pushState &&
+    !!(_global.history as History).replaceState;
+  return !isChromePackagedApp && hasHistoryApi;
+}
 
 export { _global, _support };

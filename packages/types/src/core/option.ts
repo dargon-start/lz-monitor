@@ -2,7 +2,7 @@ import { BreadcrumbData, ReportData } from './base';
 
 export interface InitOptions {
   dsn: string; // 上报的地址
-  apikey: string; // 项目id
+  apiKey: string; // 项目id
   userId?: string; // 用户id
   disabled?: boolean; // 是否禁用SDK
   silentXhr?: boolean; // 是否监控 xhr 请求
@@ -14,7 +14,7 @@ export interface InitOptions {
   silentHistory?: boolean; // 是否监听路由 history模式变化
   silentPerformance?: boolean; // 是否获取页面性能指标
   silentRecordScreen?: boolean; // 是否开启录屏
-  recordScreentime?: number; // 单次录屏时长
+  recordScreenTime?: number; // 单次录屏时长
   recordScreenTypeList?: string[]; // 上报录屏的错误列表
   silentWhiteScreen?: boolean; // 是否开启白屏检测
   skeletonProject?: boolean; // 白屏检测的项目是否有骨架屏
@@ -34,5 +34,5 @@ export interface InitOptions {
 // 录屏插件参数
 export interface RecordScreenOption {
   recordScreenTypeList: string[];
-  recordScreentime: number;
+  recordScreenTime: number;
 }

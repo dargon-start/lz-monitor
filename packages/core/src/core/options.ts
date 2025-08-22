@@ -7,7 +7,7 @@ export class Options {
   dsn = ''; // 监控上报接口的地址
   throttleDelayTime = 0; // click事件的节流时长
   overTime = 10; // 接口超时时长
-  whiteBoxElements: string[] = ['html', 'body', '#app', '#root']; // // 白屏检测的容器列表
+  whiteBoxElements: string[] = ['html', 'body', '#app', '#root']; // 白屏检测的容器列表
   silentWhiteScreen = false; // 是否开启白屏检测
   skeletonProject = false; // 项目是否有骨架屏
   filterXhrUrlRegExp: any; // 过滤的接口请求正则
@@ -26,24 +26,67 @@ export class Options {
       handleHttpStatus,
       repeatCodeError = false
     } = options;
-    validateOption(dsn, 'dsn', 'string') && (this.dsn = dsn);
-    validateOption(throttleDelayTime, 'throttleDelayTime', 'number') &&
-      (this.throttleDelayTime = throttleDelayTime);
-    validateOption(overTime, 'overTime', 'number') && (this.overTime = overTime);
-    validateOption(filterXhrUrlRegExp, 'filterXhrUrlRegExp', 'regexp') &&
-      (this.filterXhrUrlRegExp = filterXhrUrlRegExp);
-    validateOption(silentWhiteScreen, 'silentWhiteScreen', 'boolean') &&
-      (this.silentWhiteScreen = silentWhiteScreen);
-    validateOption(skeletonProject, 'skeletonProject', 'boolean') &&
-      (this.skeletonProject = skeletonProject);
-    validateOption(whiteBoxElements, 'whiteBoxElements', 'array') &&
-      (this.whiteBoxElements = whiteBoxElements);
-    validateOption(handleHttpStatus, 'handleHttpStatus', 'function') &&
-      (this.handleHttpStatus = handleHttpStatus);
-    validateOption(repeatCodeError, 'repeatCodeError', 'boolean') &&
-      (this.repeatCodeError = repeatCodeError);
+
+    // 定义需要校验的配置项
+    const validationRules = [
+      { value: dsn, name: 'dsn', type: 'string' },
+      {
+        value: throttleDelayTime,
+        name: 'throttleDelayTime',
+        type: 'number'
+      },
+      { value: overTime, name: 'overTime', type: 'number' },
+      {
+        value: filterXhrUrlRegExp,
+        name: 'filterXhrUrlRegExp',
+        type: 'regexp'
+      },
+      {
+        value: silentWhiteScreen,
+        name: 'silentWhiteScreen',
+        type: 'boolean'
+      },
+      {
+        value: skeletonProject,
+        name: 'skeletonProject',
+        type: 'boolean'
+      },
+      {
+        value: whiteBoxElements,
+        name: 'whiteBoxElements',
+        type: 'array'
+      },
+      {
+        value: handleHttpStatus,
+        name: 'handleHttpStatus',
+        type: 'function'
+      },
+      {
+        value: repeatCodeError,
+        name: 'repeatCodeError',
+        type: 'boolean'
+      }
+    ];
+
+    // 批量校验并设置配置项
+    this.validateAndSetOptions(validationRules);
+  }
+
+  private validateAndSetOptions(
+    rules: Array<{
+      value: any;
+      name: string;
+      type: string;
+    }>
+  ): void {
+    rules.forEach(({ value, name, type }) => {
+      if (validateOption(value, name, type)) {
+        (this as any)[name] = value;
+      }
+    });
   }
 }
+
 const options = _support.options || (_support.options = new Options());
 
 export function handleOptions(paramOptions: InitOptions): void {
