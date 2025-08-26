@@ -5,9 +5,11 @@ import { options } from './options';
 
 // 处理接口的状态
 export function httpTransform(data: HttpData): HttpData {
-  let message: any = '';
-  const { elapsedTime, time, method = '', type, Status = 200, response, requestData } = data;
+  let message = '';
   let status: STATUS_CODE;
+
+  const { elapsedTime, time, method = '', type, Status = 200, response, requestData } = data;
+
   if (Status === 0) {
     status = STATUS_CODE.ERROR;
     message =
@@ -48,6 +50,7 @@ export function httpTransform(data: HttpData): HttpData {
     }
   };
 }
+
 export function resourceTransform(target: ResourceTarget): ResouceError {
   return {
     time: getTimestamp(),

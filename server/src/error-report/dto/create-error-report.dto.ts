@@ -136,7 +136,7 @@ export class CreateErrorReportDto {
   @ApiProperty({ description: '响应数据', required: false })
   @IsObject()
   @IsOptional()
-  responseData?: Record<string, any>;
+  response?: Record<string, any>;
 
   // 错误相关字段
   @ApiProperty({ description: '错误行号', required: false })

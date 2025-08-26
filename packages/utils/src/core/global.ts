@@ -32,6 +32,7 @@ _support.hasError = false; // 是否有代码错误
 _support.errorMap = new Map();
 
 _support.replaceFlag = _support.replaceFlag || {};
+
 const replaceFlag = _support.replaceFlag;
 export function setFlag(replaceType: string, isSet: boolean) {
   if (replaceFlag[replaceType]) return;

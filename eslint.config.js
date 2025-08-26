@@ -23,6 +23,9 @@ export default [
         process: 'readonly'
       }
     },
+    compilerOptions: {
+      lib: ['esnext', 'dom']
+    },
     plugins: {
       '@typescript-eslint': typescript,
       prettier: prettier

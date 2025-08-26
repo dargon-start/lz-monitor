@@ -60,8 +60,8 @@ export class MonitorEvent {
   @Column('json', { nullable: true, name: 'request_data' })
   requestData: Record<string, any>; // 请求数据
 
-  @Column('json', { nullable: true, name: 'response_data' })
-  responseData: Record<string, any>; // 响应数据
+  @Column('json', { nullable: true })
+  response: Record<string, any>; // 响应数据
 
   // 错误相关字段
   @Column('int', { nullable: true })

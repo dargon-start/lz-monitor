@@ -7,3 +7,4 @@ export * from './reportData';
 export * from './setupReplace';
 export * from './subscribe';
 export * from './transformData';
+export * from './whiteScreen';

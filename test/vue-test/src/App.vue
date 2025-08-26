@@ -10,6 +10,19 @@ function handleClick() {
 function simulateError() {
   throw new Error('这是一个模拟的错误用于测试监控');
 }
+
+function simulateHttpError() {
+  fetch('http://localhost:3001/error/list/1')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('网络错误');
+      }
+      return response.json();
+    })
+    .catch(error => {
+      console.error('请求失败:', error);
+    });
+}
 </script>
 
 <template>
@@ -17,6 +30,7 @@ function simulateError() {
     <h3>测试</h3>
     <div @click="handleClick">点击计数: {{ count }}</div>
     <button @click="simulateError">模拟错误</button>
+    <button @click="simulateHttpError">模拟接口错误</button>
   </div>
 </template>
 

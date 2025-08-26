@@ -1,11 +1,21 @@
 import { EVENTTYPES, STATUS_CODE } from '@lz-monitor/common';
 import { ErrorTarget, HttpData, RouteHistory } from '@lz-monitor/types';
-import { getErrorUid, getTimestamp, hashMapExist } from '@lz-monitor/utils';
+import {
+  getErrorUid,
+  getTimestamp,
+  hashMapExist,
+  parseUrlToObj,
+  unknownToString
+} from '@lz-monitor/utils';
 import ErrorStackParser from 'error-stack-parser';
-import { breadcrumb } from './breadcrumb';
-import { options } from './options';
-import { transportData } from './reportData';
-import { resourceTransform } from './transformData';
+import {
+  breadcrumb,
+  httpTransform,
+  openWhiteScreen,
+  options,
+  resourceTransform,
+  transportData
+} from './index';
 
 const HandleEvents = {
   // 处理错误
@@ -62,13 +72,93 @@ const HandleEvents = {
   },
   handleHttp(data: HttpData, type: EVENTTYPES) {
     console.log('HTTP Error occurred:', data);
+    const result = httpTransform(data);
+    // 添加用户行为，去掉自身上报的接口行为
+    if (!data.url.includes(options.dsn)) {
+      breadcrumb.push({
+        type,
+        category: breadcrumb.getCategory(type),
+        data: result,
+        status: result.status,
+        time: data.time
+      });
+    }
+
+    if (result.status === 'error') {
+      // 上报接口错误
+      transportData.send({ ...result, type, status: STATUS_CODE.ERROR });
+    }
   },
-  handleHistory(data: RouteHistory) {},
-  handleHashchange(data: HashChangeEvent) {},
+  handleHistory(data: RouteHistory) {
+    const { from, to } = data;
+    // 定义parsedFrom变量，值为relative
+    const { relative: parsedFrom } = parseUrlToObj(from);
+    const { relative: parsedTo } = parseUrlToObj(to);
+    breadcrumb.push({
+      type: EVENTTYPES.HISTORY,
+      category: breadcrumb.getCategory(EVENTTYPES.HISTORY),
+      data: {
+        from: parsedFrom ? parsedFrom : '/',
+        to: parsedTo ? parsedTo : '/'
+      },
+      time: getTimestamp(),
+      status: STATUS_CODE.OK
+    });
+  },
+  handleHashchange(data: HashChangeEvent) {
+    const { oldURL, newURL } = data;
+    const { relative: from } = parseUrlToObj(oldURL);
+    const { relative: to } = parseUrlToObj(newURL);
+    breadcrumb.push({
+      type: EVENTTYPES.HASHCHANGE,
+      category: breadcrumb.getCategory(EVENTTYPES.HASHCHANGE),
+      data: {
+        from,
+        to
+      },
+      time: getTimestamp(),
+      status: STATUS_CODE.OK
+    });
+  },
   handleUnhandleRejection(event: PromiseRejectionEvent) {
-    console.log('Unhandled Rejection');
+    const stackFrame = ErrorStackParser.parse(event.reason)[0];
+    const { fileName, columnNumber, lineNumber } = stackFrame;
+    const message = unknownToString(event.reason.message || event.reason.stack);
+    const data = {
+      type: EVENTTYPES.UNHANDLEDREJECTION,
+      status: STATUS_CODE.ERROR,
+      time: getTimestamp(),
+      message,
+      fileName,
+      line: lineNumber,
+      column: columnNumber
+    };
+
+    breadcrumb.push({
+      type: EVENTTYPES.UNHANDLEDREJECTION,
+      category: breadcrumb.getCategory(EVENTTYPES.UNHANDLEDREJECTION),
+      time: getTimestamp(),
+      status: STATUS_CODE.ERROR,
+      data
+    });
+    const hash: string = getErrorUid(
+      `${EVENTTYPES.UNHANDLEDREJECTION}-${message}-${fileName}-${columnNumber}`
+    );
+    // 开启repeatCodeError第一次报错才上报
+    if (!options.repeatCodeError || (options.repeatCodeError && !hashMapExist(hash))) {
+      transportData.send(data);
+    }
   },
-  handleWhiteScreen() {}
+  handleWhiteScreen() {
+    openWhiteScreen((res: any) => {
+      // 上报白屏检测信息
+      transportData.send({
+        type: EVENTTYPES.WHITESCREEN,
+        time: getTimestamp(),
+        ...res
+      });
+    }, options);
+  }
 };
 
 export { HandleEvents };

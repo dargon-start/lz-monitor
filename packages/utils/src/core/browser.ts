@@ -19,12 +19,12 @@ export function htmlElementAsString(target: HTMLElement): string {
 }
 /**
  * 将地址字符串转换成对象，
- * 输入：'https://github.com/xy-sea/web-see?token=123&name=11'
+ * 输入：'https://github.com/lz-monitor?token=123&name=11'
  * 输出：{
  *  "host": "github.com",
- *  "path": "/xy-sea/web-see",
+ *  "path": "/lz-monitor",
  *  "protocol": "https",
- *  "relative": "/xy-sea/web-see?token=123&name=11"
+ *  "relative": "/lz-monitor?token=123&name=11"
  * }
  */
 export function parseUrlToObj(url: string) {
