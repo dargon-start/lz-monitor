@@ -1,18 +1,18 @@
-import { NestFactory, Reflector } from '@nestjs/core';
 import {
+  BadRequestException,
+  ClassSerializerInterceptor,
   ValidationPipe,
   VersioningType,
-  ClassSerializerInterceptor,
-  BadRequestException,
 } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { ResponseInterceptor } from './common/response';
 import { HttpFilter } from './common/filter';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationExceptionFilter } from './common/filters/validation.filter';
+import { ResponseInterceptor } from './common/response';
 
 // const whiteList = ['/user/login', '/user/register'];
 
@@ -76,7 +76,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/api-docs', app, document);
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3001);
 }
 
 bootstrap();

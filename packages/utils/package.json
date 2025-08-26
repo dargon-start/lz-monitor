@@ -2,7 +2,11 @@
   "name": "@lz-monitor/utils",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "./src/index.ts",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --config ../../eslint.config.js --fix"
@@ -11,6 +15,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@lz-monitor/common": "workspace:^",
+    "@lz-monitor/types": "workspace:^",
     "ua-parser-js": "^2.0.4"
   }
 }

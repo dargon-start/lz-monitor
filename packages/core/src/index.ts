@@ -15,7 +15,7 @@ import {
 
 function init(options: InitOptions) {
   if (!options.dsn || !options.apiKey) {
-    return console.error(`web-see 缺少必须配置项：${!options.dsn ? 'dsn' : 'apiKey'} `);
+    return console.error(`lz-monitor 缺少必须配置项：${!options.dsn ? 'dsn' : 'apiKey'} `);
   }
   if (!('fetch' in _global) || options.disabled) return;
   // 初始化配置

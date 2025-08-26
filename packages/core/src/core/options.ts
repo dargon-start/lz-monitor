@@ -5,6 +5,7 @@ import { transportData } from './reportData';
 
 export class Options {
   dsn = ''; // 监控上报接口的地址
+  apiKey = ''; // 项目API密钥
   throttleDelayTime = 0; // click事件的节流时长
   overTime = 10; // 接口超时时长
   whiteBoxElements: string[] = ['html', 'body', '#app', '#root']; // 白屏检测的容器列表
@@ -17,6 +18,7 @@ export class Options {
   bindOptions(options: InitOptions): void {
     const {
       dsn,
+      apiKey,
       filterXhrUrlRegExp,
       throttleDelayTime = 0,
       overTime = 10,
@@ -30,6 +32,7 @@ export class Options {
     // 定义需要校验的配置项
     const validationRules = [
       { value: dsn, name: 'dsn', type: 'string' },
+      { value: apiKey, name: 'apiKey', type: 'string' },
       {
         value: throttleDelayTime,
         name: 'throttleDelayTime',

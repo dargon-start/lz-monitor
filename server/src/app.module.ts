@@ -1,9 +1,8 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
-import { UploadModule } from './upload/upload.module';
 import { ErrorReportModule } from './error-report/error-report.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -22,7 +21,6 @@ import { ErrorReportModule } from './error-report/error-report.module';
       synchronize: true, //synchronize字段代表是否自动将实体类同步到数据库
       timezone: 'Z', // 设置为东八区
     }),
-    UserModule,
     UploadModule,
     ErrorReportModule,
   ],

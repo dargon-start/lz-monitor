@@ -1,8 +1,16 @@
-import { Controller, Post, Body, ValidationPipe, Logger } from '@nestjs/common';
-import { ErrorReportService } from './error-report.service';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Post,
+  Query,
+  ValidationPipe,
+} from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateErrorReportDto } from './dto/create-error-report.dto';
 import { QueryErrorReportDto } from './dto/query-error-report.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ErrorReportService } from './error-report.service';
 
 @Controller('error')
 @ApiTags('错误监控')
@@ -24,31 +32,14 @@ export class ErrorReportController {
     )
     createErrorReportDto: CreateErrorReportDto,
   ) {
-    // 中间件已经将 text/plain 内容转换为 JSON，ValidationPipe 会验证转换后的数据
     return this.errorReportService.create(createErrorReportDto);
   }
 
-  @Post('list')
+  @Get('list')
   @ApiOperation({ summary: '获取监控事件列表' })
   @ApiResponse({ status: 200, description: '返回监控事件列表' })
-  @ApiBody({ type: QueryErrorReportDto })
-  findAll(
-    @Body(
-      new ValidationPipe({
-        transform: true,
-        transformOptions: { enableImplicitConversion: true },
-      }),
-    )
-    queryDto: QueryErrorReportDto,
-  ) {
-    // 转换查询参数从驼峰到下划线
-    const transformedQuery = {};
-    if (queryDto.appId) transformedQuery['app_id'] = queryDto.appId;
-    if (queryDto.eventType) transformedQuery['event_type'] = queryDto.eventType;
-    if (queryDto.subType) transformedQuery['sub_type'] = queryDto.subType;
-    if (queryDto.page) transformedQuery['page'] = queryDto.page;
-    if (queryDto.pageSize) transformedQuery['pageSize'] = queryDto.pageSize;
-
-    return this.errorReportService.findAll(transformedQuery);
+  findAll(@Query() queryDto: QueryErrorReportDto) {
+    // 使用新的字段名，不需要转换
+    return this.errorReportService.findAll(queryDto);
   }
 }

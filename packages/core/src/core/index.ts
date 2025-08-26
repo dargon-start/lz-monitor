@@ -2,6 +2,7 @@ export * from './breadcrumb';
 export * from './customLog';
 export * from './handleEvents';
 export * from './options';
+export * from './replace';
 export * from './reportData';
 export * from './setupReplace';
 export * from './subscribe';

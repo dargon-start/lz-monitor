@@ -16,6 +16,7 @@
   "dependencies": {
     "@lz-monitor/common": "workspace:^",
     "@lz-monitor/types": "workspace:^",
+    "@lz-monitor/utils": "workspace:^",
     "error-stack-parser": "^2.1.4"
   }
 }
