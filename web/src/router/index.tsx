@@ -10,17 +10,17 @@ const Page404 = lazy(() => import('@/pages/error/page-404'));
 const PUBLIC_ROUTE = [
   {
     path: '/login',
-    element: <Login></Login>,
+    element: <Login></Login>
   },
   {
     path: '/404',
-    element: <Page404></Page404>,
-  },
+    element: <Page404></Page404>
+  }
 ];
 
 const NO_MATCHED_ROUTE = {
   path: '*',
-  element: <Navigate to="/404" replace />,
+  element: <Navigate to="/404" replace />
 };
 
 export const MENU_ROUTE = [userManagement, test, errorReport];
@@ -31,11 +31,11 @@ const PROTECTED_ROUTE = [
     children: [
       {
         index: true,
-        element: <Navigate to="/user-management/user" replace />,
-      },
-    ],
+        element: <Navigate to="/login" replace />
+      }
+    ]
   },
-  ...MENU_ROUTE,
+  ...MENU_ROUTE
 ];
 
 export default function Router() {
