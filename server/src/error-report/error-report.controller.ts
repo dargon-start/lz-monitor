@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Logger,
-  Post,
-  Query,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Logger, Post, ValidationPipe } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateErrorReportDto } from './dto/create-error-report.dto';
 import { QueryErrorReportDto } from './dto/query-error-report.dto';
@@ -35,10 +27,11 @@ export class ErrorReportController {
     return this.errorReportService.create(createErrorReportDto);
   }
 
-  @Get('list')
+  @Post('list')
   @ApiOperation({ summary: '获取监控事件列表' })
   @ApiResponse({ status: 200, description: '返回监控事件列表' })
-  findAll(@Query() queryDto: QueryErrorReportDto) {
+  @ApiBody({ type: QueryErrorReportDto })
+  findAll(@Body() queryDto: QueryErrorReportDto) {
     // 使用新的字段名，不需要转换
     return this.errorReportService.findAll(queryDto);
   }

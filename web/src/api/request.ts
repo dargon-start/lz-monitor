@@ -1,13 +1,13 @@
-import axios, { type AxiosRequestConfig, type AxiosError, type AxiosResponse } from 'axios';
+import axios, { type AxiosError, type AxiosRequestConfig, type AxiosResponse } from 'axios';
 
-import { ResultEnum } from '#/enum';
 import type { Result } from '#/api';
+import { ResultEnum } from '#/enum';
 
 // 创建 axios 实例
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_API,
+  baseURL: import.meta.env.VITE_APP_BASE_API || '/api',
   timeout: 50000,
-  headers: { 'Content-Type': 'application/json;charset=utf-8' },
+  headers: { 'Content-Type': 'application/json;charset=utf-8' }
 });
 
 // 请求拦截

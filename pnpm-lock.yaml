@@ -262,6 +262,12 @@ importers:
       '@faker-js/faker':
         specifier: ^9.8.0
         version: 9.9.0
+      '@tanstack/react-query':
+        specifier: ^5.90.5
+        version: 5.90.5(react@19.1.1)
+      '@tanstack/react-query-devtools':
+        specifier: ^5.90.2
+        version: 5.90.2(@tanstack/react-query@5.90.5(react@19.1.1))(react@19.1.1)
       '@types/node':
         specifier: ^22.14.1
         version: 22.17.0
@@ -1700,6 +1706,23 @@ packages:
   '@szmarczak/http-timer@5.0.1':
     resolution: {integrity: sha512-+PmQX0PiAYPMeVYe237LJAYvOMYW1j2rH5YROyS3b4CTVJum34HfRvKvAzozHAQG0TnHNdUfY9nCeUyRAs//cw==, tarball: https://registry.npmjs.org/@szmarczak/http-timer/-/http-timer-5.0.1.tgz}
     engines: {node: '>=14.16'}
+
+  '@tanstack/query-core@5.90.5':
+    resolution: {integrity: sha512-wLamYp7FaDq6ZnNehypKI5fNvxHPfTYylE0m/ZpuuzJfJqhR5Pxg9gvGBHZx4n7J+V5Rg5mZxHHTlv25Zt5u+w==, tarball: https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.90.5.tgz}
+
+  '@tanstack/query-devtools@5.90.1':
+    resolution: {integrity: sha512-GtINOPjPUH0OegJExZ70UahT9ykmAhmtNVcmtdnOZbxLwT7R5OmRztR5Ahe3/Cu7LArEmR6/588tAycuaWb1xQ==, tarball: https://registry.npmjs.org/@tanstack/query-devtools/-/query-devtools-5.90.1.tgz}
+
+  '@tanstack/react-query-devtools@5.90.2':
+    resolution: {integrity: sha512-vAXJzZuBXtCQtrY3F/yUNJCV4obT/A/n81kb3+YqLbro5Z2+phdAbceO+deU3ywPw8B42oyJlp4FhO0SoivDFQ==, tarball: https://registry.npmjs.org/@tanstack/react-query-devtools/-/react-query-devtools-5.90.2.tgz}
+    peerDependencies:
+      '@tanstack/react-query': ^5.90.2
+      react: ^18 || ^19
+
+  '@tanstack/react-query@5.90.5':
+    resolution: {integrity: sha512-pN+8UWpxZkEJ/Rnnj2v2Sxpx1WFlaa9L6a4UO89p6tTQbeo+m0MS8oYDjbggrR8QcTyjKoYWKS3xJQGr3ExT8Q==, tarball: https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.90.5.tgz}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@tokenizer/inflate@0.2.7':
     resolution: {integrity: sha512-MADQgmZT1eKjp06jpI2yozxaU9uVs4GzzgSL+uEq7bVcJ9V1ZXQkeGNql1fsSI0gMy1vhvNTNbUqrx+pZfJVmg==, tarball: https://registry.npmjs.org/@tokenizer/inflate/-/inflate-0.2.7.tgz}
@@ -7461,6 +7484,21 @@ snapshots:
   '@szmarczak/http-timer@5.0.1':
     dependencies:
       defer-to-connect: 2.0.1
+
+  '@tanstack/query-core@5.90.5': {}
+
+  '@tanstack/query-devtools@5.90.1': {}
+
+  '@tanstack/react-query-devtools@5.90.2(@tanstack/react-query@5.90.5(react@19.1.1))(react@19.1.1)':
+    dependencies:
+      '@tanstack/query-devtools': 5.90.1
+      '@tanstack/react-query': 5.90.5(react@19.1.1)
+      react: 19.1.1
+
+  '@tanstack/react-query@5.90.5(react@19.1.1)':
+    dependencies:
+      '@tanstack/query-core': 5.90.5
+      react: 19.1.1
 
   '@tokenizer/inflate@0.2.7':
     dependencies:
