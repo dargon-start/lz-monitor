@@ -1,4 +1,5 @@
 import type { ErrorReport, ErrorReportQuery } from '@/api/error-report/error-report.type';
+import { useTableScrollY } from '@/hooks';
 import { useErrorReports } from '@/hooks/useErrorReports';
 import { Table } from 'antd';
 import { memo, useMemo, useState } from 'react';
@@ -22,6 +23,9 @@ export default memo(function ErrorReportList() {
   // 详情模态框状态
   const [detailVisible, setDetailVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<ErrorReport | null>(null);
+
+  // 动态计算表格滚动高度（自动获取表头和分页器高度）
+  const [tableRef, tableScrollY] = useTableScrollY();
 
   // 使用 React Query 获取数据
   const { data, isLoading } = useErrorReports(query);
@@ -55,8 +59,8 @@ export default memo(function ErrorReportList() {
   const dataSource = useMemo<DataType[]>(() => data?.list || [], [data?.list]);
 
   return (
-    <div className="p-6 bg-white">
-      <div className="mb-6">
+    <div className="flex flex-col h-full p-3 bg-white">
+      <div className="mb-4 flex-shrink-0">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">错误报告列表</h2>
 
         {/* 搜索表单 */}
@@ -70,10 +74,13 @@ export default memo(function ErrorReportList() {
 
       {/* 表格 */}
       <Table<DataType>
+        className="flex-1 overflow-hidden"
+        ref={tableRef}
         columns={columns}
+        size="middle"
         dataSource={dataSource}
         loading={isLoading}
-        scroll={{ x: 1200 }}
+        scroll={{ x: 1200, y: tableScrollY }}
         pagination={{
           current: query.page,
           pageSize: query.pageSize,

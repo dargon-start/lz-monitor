@@ -1,71 +1,48 @@
-import { Input } from 'antd';
+import type { FormProps } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
+
+interface LoginFormValues {
+  username: string;
+  password: string;
+}
 
 export default function Login() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  const [errors, setErrors] = useState({
-    email: '',
-    password: ''
-  });
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
 
-  const validateForm = () => {
-    const newErrors = {
-      email: '',
-      password: ''
-    };
-
-    if (!formData.email.trim()) {
-      newErrors.email = '请输入邮箱';
-    }
-
-    if (!formData.password) {
-      newErrors.password = '请输入密码';
-    } else if (formData.password.length < 6) {
-      newErrors.password = '密码长度至少为6位';
-    }
-
-    setErrors(newErrors);
-    return !newErrors.email && !newErrors.password;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
+  const onFinish: FormProps<LoginFormValues>['onFinish'] = async values => {
     setLoading(true);
 
     try {
+      // TODO: 替换为实际的登录API调用
+      // const response = await apiClient.post({
+      //   url: '/auth/login',
+      //   data: values,
+      // });
+
+      // 模拟API调用
       await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('登录成功', formData);
-      alert('登录成功！');
+
+      console.log('登录成功', values);
+      message.success('登录成功！');
+
+      // 登录成功后的处理
+      // localStorage.setItem('token', response.token);
+      navigate('/error-report/list');
     } catch (error: any) {
       console.error('操作失败:', error);
-      alert(error?.message || '操作失败，请重试');
+      message.error(error?.message || '登录失败，请检查邮箱和密码');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-
-    if (errors[name as keyof typeof errors]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+  const onFinishFailed: FormProps<LoginFormValues>['onFinishFailed'] = errorInfo => {
+    console.log('表单验证失败:', errorInfo);
+    message.warning('请检查表单信息');
   };
 
   return (
@@ -77,63 +54,56 @@ export default function Login() {
         {/* Left Side - Login Form */}
         <div className="flex-1 flex flex-col items-center justify-center px-16 py-12 ">
           <div className="w-full max-w-md">
-            <h2
-              className="text-center mb-16"
-              style={{
-                fontSize: '34px',
-                fontWeight: 700,
-                lineHeight: 3,
-                color: '#181818'
-              }}
-            >
+            <h2 className="text-[34px] font-bold leading-[3] text-[#181818] text-center mb-16">
               Welcome Back !
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
+            <Form
+              form={form}
+              name="login"
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+              layout="vertical"
+              requiredMark={false}
+            >
+              <Form.Item name="username" rules={[{ required: true, message: '请输入账号' }]}>
                 <Input
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
                   className="neumorphism-input"
                   style={{
                     height: '40px',
                     paddingLeft: '24px',
-                    fontSize: '13px',
                     letterSpacing: '0.15px',
-                    borderRadius: '8px'
+                    borderRadius: '8px',
+                    color: '#333'
                   }}
-                  placeholder="Email"
+                  placeholder="账号"
                 />
-                {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
-              </div>
+              </Form.Item>
 
-              <div>
+              <Form.Item name="password" rules={[{ required: true, message: '请输入密码' }]}>
                 <Input.Password
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
                   className="neumorphism-input"
                   style={{
                     height: '40px',
-                    fontSize: '13px',
                     letterSpacing: '0.15px',
-                    borderRadius: '8px'
+                    borderRadius: '8px',
+                    color: '#333'
                   }}
                   placeholder="Password"
                 />
-                {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
-              </div>
+              </Form.Item>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full font-bold text-base uppercase tracking-wider hover:from-blue-600 hover:to-blue-700 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-              >
-                {loading ? 'Signing In...' : 'Sign In'}
-              </button>
-            </form>
+              <Form.Item>
+                <Button
+                  htmlType="submit"
+                  loading={loading}
+                  className="neumorphism-button w-full h-[48px] font-bold text-base uppercase tracking-wider mt-4"
+                >
+                  {loading ? '登录中...' : '登录'}
+                </Button>
+              </Form.Item>
+            </Form>
           </div>
         </div>
 
@@ -230,8 +200,45 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Custom styles for antd Input */}
+      {/* Custom styles for antd components */}
       <style>{`
+        /* antd Form 样式覆盖 */
+        .ant-form-vertical .ant-form-item {
+          margin-bottom: 20px;
+        }
+        
+        .ant-form-item-explain-error {
+          font-size: 12px;
+          margin-top: 4px;
+          color: #ef4444;
+        }
+        
+        /* 新拟态按钮样式 */
+        .neumorphism-button.ant-btn {
+          background-color: #ecf0f3;
+          border: none;
+          border-radius: 50px;
+          color: #333;
+          box-shadow: 10px 10px 20px #d1d9e6, -10px -10px 20px #f9f9f9;
+          transition: all 0.3s ease;
+        }
+        
+        .neumorphism-button.ant-btn:hover:not(:disabled) {
+          background-color: #ecf0f3;
+          color: #333;
+          box-shadow: 10px 10px 20px #d1d9e6, -10px -10px 20px #f9f9f9;
+        }
+        
+        .neumorphism-button.ant-btn:active:not(:disabled) {
+          box-shadow: inset 5px 5px 10px #d1d9e6, inset -5px -5px 10px #f9f9f9;
+        }
+        
+        .neumorphism-button.ant-btn:disabled {
+          background-color: #ecf0f3;
+          color: #a0aec0;
+          box-shadow: 10px 10px 20px #d1d9e6, -10px -10px 20px #f9f9f9;
+        }
+        
         /* 普通输入框默认样式 */
         .neumorphism-input.ant-input {
           background-color: #ecf0f3 !important;

@@ -1,8 +1,8 @@
-import { useState, memo, useMemo, Suspense } from 'react';
-import { useOutlet } from 'react-router';
-import { Layout, theme, Spin } from 'antd';
 import MotionViewport from '@/components/animate/MotionViewport';
 import { usePathname } from '@/hooks';
+import { Layout, Spin, theme } from 'antd';
+import { Suspense, useMemo, useState } from 'react';
+import { useOutlet } from 'react-router';
 import Header from './components/Header';
 import SideBar from './components/SideBar';
 
@@ -13,7 +13,7 @@ export default function DashboardLayout() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { colorBgContainer, borderRadiusLG }
   } = theme.useToken();
 
   // 使用 useMemo 缓存样式对象，避免不必要的重新计算
@@ -23,7 +23,7 @@ export default function DashboardLayout() {
       padding: 24,
       minHeight: 280,
       background: colorBgContainer,
-      borderRadius: borderRadiusLG,
+      borderRadius: borderRadiusLG
     }),
     [colorBgContainer, borderRadiusLG]
   );
@@ -36,18 +36,23 @@ export default function DashboardLayout() {
 
   return (
     <Layout className="h-screen overflow-hidden">
-      <Sider trigger={null} style={{ background: colorBgContainer }} collapsible collapsed={collapsed}>
+      <Sider
+        trigger={null}
+        style={{ background: colorBgContainer }}
+        collapsible
+        collapsed={collapsed}
+      >
         <SideBar collapsed={collapsed}></SideBar>
       </Sider>
-      <Layout>
+      <Layout className="flex flex-col">
         <Header collapsed={collapsed} setCollapsed={setCollapsed} />
-        <Content style={contentStyle}>
+        <Content style={contentStyle} className="flex-1 overflow-hidden">
           <Suspense fallback={fallBack} key={pathname}>
             {/*  
                 MotionViewport,Suspense需要加上key，否则切换路由没有动画效果
                 使用useOutlet获取当前路由组件，避免DashboardLayout组件重复渲染
             */}
-            <MotionViewport key={pathname} className="h-full w-full overflow-scroll">
+            <MotionViewport key={pathname} className="h-full w-full">
               {Outlet}
             </MotionViewport>
           </Suspense>
