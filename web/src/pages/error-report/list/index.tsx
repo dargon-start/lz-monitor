@@ -13,8 +13,7 @@ interface DataType extends ErrorReport {
 
 const INITIAL_QUERY: ErrorReportQuery = {
   page: 1,
-  pageSize: 10,
-  apiKey: 'test-api-key-001' // 默认测试项目
+  pageSize: 10
 };
 
 export default memo(function ErrorReportList() {
