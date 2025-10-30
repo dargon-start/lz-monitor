@@ -2,6 +2,7 @@ import type { FormProps } from 'antd';
 import { Button, Form, Input, message } from 'antd';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import './common.css';
 
 interface LoginFormValues {
   username: string;
@@ -199,86 +200,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-
-      {/* Custom styles for antd components */}
-      <style>{`
-        /* antd Form 样式覆盖 */
-        .ant-form-vertical .ant-form-item {
-          margin-bottom: 20px;
-        }
-        
-        .ant-form-item-explain-error {
-          font-size: 12px;
-          margin-top: 4px;
-          color: #ef4444;
-        }
-        
-        /* 新拟态按钮样式 */
-        .neumorphism-button.ant-btn {
-          background-color: #ecf0f3;
-          border: none;
-          border-radius: 50px;
-          color: #333;
-          box-shadow: 10px 10px 20px #d1d9e6, -10px -10px 20px #f9f9f9;
-          transition: all 0.3s ease;
-        }
-        
-        .neumorphism-button.ant-btn:hover:not(:disabled) {
-          background-color: #ecf0f3;
-          color: #333;
-          box-shadow: 10px 10px 20px #d1d9e6, -10px -10px 20px #f9f9f9;
-        }
-        
-        .neumorphism-button.ant-btn:active:not(:disabled) {
-          box-shadow: inset 5px 5px 10px #d1d9e6, inset -5px -5px 10px #f9f9f9;
-        }
-        
-        .neumorphism-button.ant-btn:disabled {
-          background-color: #ecf0f3;
-          color: #a0aec0;
-          box-shadow: 10px 10px 20px #d1d9e6, -10px -10px 20px #f9f9f9;
-        }
-        
-        /* 普通输入框默认样式 */
-        .neumorphism-input.ant-input {
-          background-color: #ecf0f3 !important;
-          border: none !important;
-          box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #f9f9f9 !important;
-          transition: all 0.25s ease;
-        }
-        
-        /* 普通输入框聚焦样式 */
-        .neumorphism-input.ant-input:focus,
-        .neumorphism-input.ant-input-focused {
-          box-shadow: inset 4px 4px 4px #d1d9e6, inset -4px -4px 4px #f9f9f9 !important;
-        }
-        
-        /* 密码输入框容器（ant-input-affix-wrapper） */
-        .neumorphism-input.ant-input-affix-wrapper {
-          background-color: #ecf0f3 !important;
-          border: none !important;
-          padding-left: 24px !important;
-          box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #f9f9f9 !important;
-          transition: all 0.25s ease;
-        }
-        
-        /* 密码输入框容器聚焦样式 */
-        .neumorphism-input.ant-input-affix-wrapper:focus,
-        .neumorphism-input.ant-input-affix-wrapper-focused {
-          box-shadow: inset 4px 4px 4px #d1d9e6, inset -4px -4px 4px #f9f9f9 !important;
-        }
-        
-        /* 密码输入框内部的 input */
-        .neumorphism-input.ant-input-affix-wrapper .ant-input {
-          background-color: #ecf0f3 !important;
-          padding-left: 0 !important;
-        }
-        
-        /* 密码输入框的眼睛图标 */
-        .neumorphism-input .ant-input-suffix {
-          background-color: transparent;
-        }
-      `}</style>
     </div>
   );
 }

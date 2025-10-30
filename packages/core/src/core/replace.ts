@@ -236,13 +236,14 @@ function domReplace(): void {
   on(
     _global.document,
     'click',
-    function (this: any): void {
+    function (event: MouseEvent): void {
+      // 使用 event.target 而不是 this，避免干扰正常的事件流
       clickThrottle(EVENTTYPES.CLICK, {
         category: 'click',
-        data: this
+        data: event.target
       });
     },
-    true
+    true // 使用捕获阶段
   );
 }
 function whiteScreen(): void {

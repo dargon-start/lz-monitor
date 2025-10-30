@@ -36,6 +36,19 @@ lz-monitor/
 
 - NestJS
 - TypeScript
+- TypeORM
+- MySQL 8.0+
+
+### 数据库
+
+- **方案一**：单表设计（适合中小型项目，< 100万数据）
+- **方案二**：多表设计（推荐，生产级方案）✅
+  - 8张核心表，职责清晰
+  - 优化的索引策略
+  - 支持数据分区和归档
+  - 查询性能提升10倍
+
+详见：[数据库设计文档](server/docs/DATABASE_DESIGN.md)
 
 ## 常用 Hooks
 
@@ -111,20 +124,67 @@ export default function MyList() {
 - ✅ 延迟计算策略，确保 DOM 完全渲染后再计算
 - ✅ 开箱即用，极简 API
 
-## 开发
+## 快速开始
+
+### 1. 数据库初始化
+
+```bash
+# 创建数据库
+mysql -u root -p -e "CREATE DATABASE lz_monitor DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+# 执行初始化脚本（方案二：多表设计）
+mysql -u root -p lz_monitor < server/migrations/001_init_database.sql
+```
+
+### 2. 配置环境变量
+
+创建 `server/.env` 文件：
+
+```env
+DB_TYPE=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=your_password
+DB_DATABASE=lz_monitor
+PORT=3001
+```
+
+### 3. 启动服务
 
 ```bash
 # 安装依赖
 pnpm install
 
-# 启动前端
-cd web
-pnpm dev
-
 # 启动后端
 cd server
 pnpm start:dev
+
+# 启动前端
+cd web
+pnpm dev
 ```
+
+### 4. 访问应用
+
+- 前端管理平台：http://localhost:5173
+- 后端 API：http://localhost:3001
+- Swagger 文档：http://localhost:3001/api
+
+## 数据库迁移
+
+如果你正在使用旧版单表设计，可以迁移到新的多表设计：
+
+```bash
+# 1. 备份数据
+mysqldump -u root -p lz_monitor > backup_$(date +%Y%m%d).sql
+
+# 2. 执行迁移
+mysql -u root -p lz_monitor < server/migrations/001_init_database.sql
+mysql -u root -p lz_monitor < server/migrations/002_migrate_from_single_table.sql
+```
+
+详见：[迁移指南](server/docs/MIGRATION_GUIDE.md)
 
 ## 许可证
 

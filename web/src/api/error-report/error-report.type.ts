@@ -1,148 +1,268 @@
-// 设备信息
+// 面包屑信息
+export interface Breadcrumb {
+  type: string; // 类型
+  category: string; // 分类
+  status: string; // 状态
+  time: number; // 时间戳
+  data: any; // 数据
+}
+
+// 设备信息（简化版）
 export interface DeviceInfo {
-  deviceType?: string; // 设备类型 (mobile, desktop, tablet)
+  browser?: string; // 浏览器
+  browserVersion?: string; // 浏览器版本
+  os?: string; // 操作系统
+  osVersion?: string; // 系统版本
+  device?: string; // 设备型号
+  device_type?: string; // 设备类型：pc/mobile/tablet
+  ua?: string; // User Agent
   screenResolution?: string; // 屏幕分辨率
-  viewportSize?: string; // 视口大小
-  pixelRatio?: number; // 像素比
-  colorDepth?: number; // 颜色深度
-  orientation?: string; // 设备方向
 }
 
-// 浏览器信息
-export interface BrowserInfo {
-  name?: string; // 浏览器名称
-  version?: string; // 浏览器版本
-  engine?: string; // 浏览器引擎
-  userAgent?: string; // User Agent
-  language?: string; // 浏览器语言
-  cookieEnabled?: boolean; // 是否启用Cookie
-  javaEnabled?: boolean; // 是否启用Java
-  onlineStatus?: boolean; // 在线状态
+// 长任务信息
+export interface LongTask {
+  duration?: number; // 持续时间
+  startTime?: number; // 开始时间
+  [key: string]: any;
 }
 
-// 操作系统信息
-export interface OSInfo {
-  name?: string; // 操作系统名称
-  version?: string; // 操作系统版本
-  platform?: string; // 平台
-  architecture?: string; // 架构
+// 内存信息
+export interface MemoryInfo {
+  jsHeapSizeLimit?: number;
+  totalJSHeapSize?: number;
+  usedJSHeapSize?: number;
+  [key: string]: any;
 }
 
-// 网络连接信息
-export interface NetworkInfo {
-  connectionType?: string; // 连接类型
-  effectiveType?: string; // 有效连接类型
-  downlink?: number; // 下行速度
-  rtt?: number; // 往返时间
-  saveData?: boolean; // 是否节省数据
-}
-
-// 错误事件数据
-export interface ErrorEventData {
-  message?: string; // 错误消息
-  filename?: string; // 错误文件名
-  lineno?: number; // 错误行号
-  colno?: number; // 错误列号
-  stack?: string; // 错误堆栈
-  componentStack?: string; // 组件堆栈（React）
-  errorBoundary?: string; // 错误边界信息
-  props?: Record<string, any>; // 组件属性
-  source?: string; // 错误来源
-  [key: string]: any; // 其他自定义数据
-}
-
-// 创建错误报告DTO (对应后端)
+// 创建监控事件DTO (对应后端 CreateMonitorEventDto)
 export interface CreateErrorReportDto {
-  eventType: string; // 事件类型，默认 'error'
-  subType: string; // 错误子类型 (js-error/xhr/resource/promise等)
-  appId: string; // 应用ID/标识
+  apiKey: string; // 项目API密钥
+  type: string; // 事件类型：error/unhandledrejection/resource/xhr/fetch/performance/whiteScreen
+  uuid: string; // 会话ID
   userId?: string; // 用户ID
-  sessionId: string; // 会话ID
-  url?: string; // 事件发生的URL
-  pageTitle?: string; // 页面标题
-  referrer?: string; // 来源URL
-  timestamp: number; // 事件发生的时间戳
-  deviceInfo?: DeviceInfo; // 设备信息
-  browserInfo?: BrowserInfo; // 浏览器信息
-  osInfo?: OSInfo; // 操作系统信息
-  networkInfo?: NetworkInfo; // 网络连接信息
-  eventData: ErrorEventData; // 事件详细数据
+  pageUrl: string; // 页面地址
+  time: number; // 事件发生时间戳
+  sdkVersion?: string; // SDK版本
+  
+  // 错误相关字段
+  message?: string; // 错误消息
+  fileName?: string; // 错误文件
+  line?: number; // 错误行号
+  column?: number; // 错误列号
+  stack?: string; // 错误堆栈
+  name?: string; // 错误名称或资源名称
+  
+  // HTTP请求相关字段
+  method?: string; // HTTP方法
+  url?: string; // 请求URL
+  Status?: number; // HTTP状态码（注意大写）
+  status?: string; // 状态：ok/error
+  elapsedTime?: number; // 请求耗时
+  requestData?: any; // 请求数据
+  response?: any; // 响应数据
+  
+  // 性能指标相关字段
+  value?: number; // 指标值
+  rating?: string; // 评级：good/needs-improvement/poor
+  longTask?: LongTask; // 长任务信息
+  memory?: MemoryInfo; // 内存信息
+  
+  // 白屏检测相关字段
+  emptyPoints?: number; // 空白采样点数量
+  skeletonData?: any; // 骨架屏数据
+  
+  // 设备信息
+  deviceInfo?: DeviceInfo;
+  
+  // 上下文信息
+  breadcrumb?: Breadcrumb[]; // 用户行为栈
+  recordScreenId?: string; // 录屏ID
+  extraData?: Record<string, any>; // 扩展数据
 }
 
-// 错误报告实体 (从后端返回的完整数据)
+// 错误监控实体 (从后端返回)
 export interface ErrorReport {
-  id: string; // 错误报告ID
-  eventType: string; // 事件类型
-  subType: string; // 错误子类型
-  appId: string; // 应用ID
-  userId?: string; // 用户ID
-  userName?: string; // 用户名（关联查询得到）
-  sessionId: string; // 会话ID
-  url?: string; // 事件发生的URL
-  pageTitle?: string; // 页面标题
-  referrer?: string; // 来源URL
-  timestamp: number; // 事件发生的时间戳
-  deviceInfo?: DeviceInfo; // 设备信息
-  browserInfo?: BrowserInfo; // 浏览器信息
-  osInfo?: OSInfo; // 操作系统信息
-  networkInfo?: NetworkInfo; // 网络连接信息
-  eventData: ErrorEventData; // 事件详细数据
-  status: 'pending' | 'resolved' | 'ignored'; // 处理状态
-  level: 'error' | 'warning' | 'info'; // 错误级别
-  count: number; // 发生次数
-  firstOccurred: string; // 首次发生时间
-  lastOccurred: string; // 最后发生时间
-  createTime: string; // 创建时间
-  updateTime: string; // 更新时间
+  id: number; // 错误ID
+  apiKey: string; // 项目API密钥
+  errorType: string; // 错误类型
+  errorHash?: string; // 错误哈希
+  
+  // 错误详情
+  message?: string;
+  fileName?: string;
+  line?: number;
+  column?: number;
+  stack?: string;
+  name?: string;
+  
+  // 页面信息
+  pageUrl: string;
+  uuid: string;
+  userId?: string;
+  
+  // 设备信息
+  browser?: string;
+  browserVersion?: string;
+  os?: string;
+  osVersion?: string;
+  deviceType?: string;
+  device?: string;
+  ua?: string;
+  
+  // 上下文信息
+  breadcrumb?: Breadcrumb[];
+  recordScreenId?: string;
+  extraData?: Record<string, any>;
+  
+  // 元信息
+  ip?: string;
+  sdkVersion?: string;
+  status: string;
+  time: number;
+  createdAt: string;
 }
 
-// 查询参数
+// HTTP请求监控实体
+export interface HttpRequest {
+  id: number;
+  apiKey: string;
+  requestType: string; // xhr/fetch
+  method?: string;
+  url: string;
+  urlHash?: string;
+  httpStatus?: number;
+  status?: string; // ok/error
+  elapsedTime?: number;
+  requestSize?: number;
+  responseSize?: number;
+  requestData?: any;
+  responseData?: any;
+  message?: string;
+  pageUrl: string;
+  uuid: string;
+  userId?: string;
+  browser?: string;
+  os?: string;
+  deviceType?: string;
+  ip?: string;
+  sdkVersion?: string;
+  time: number;
+  createdAt: string;
+}
+
+// 性能监控实体
+export interface Performance {
+  id: number;
+  apiKey: string;
+  metricName: string; // FCP/LCP/FID/CLS/TTFB
+  value: number;
+  rating?: string;
+  pageUrl: string;
+  uuid: string;
+  userId?: string;
+  browser?: string;
+  os?: string;
+  deviceType?: string;
+  longTask?: LongTask;
+  memory?: MemoryInfo;
+  ip?: string;
+  sdkVersion?: string;
+  time: number;
+  createdAt: string;
+}
+
+// 会话信息实体
+export interface Session {
+  id: number;
+  apiKey: string;
+  uuid: string;
+  userId?: string;
+  entryUrl?: string;
+  exitUrl?: string;
+  pageViews: number;
+  duration?: number;
+  browser?: string;
+  browserVersion?: string;
+  os?: string;
+  osVersion?: string;
+  device?: string;
+  deviceType?: string;
+  ua?: string;
+  screenResolution?: string;
+  ip?: string;
+  country?: string;
+  province?: string;
+  city?: string;
+  errorCount: number;
+  httpErrorCount: number;
+  whiteScreen: number;
+  sdkVersion?: string;
+  firstSeenAt: number;
+  lastSeenAt: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// 查询参数（通用）
 export interface ErrorReportQuery {
   page?: number; // 页码
   pageSize?: number; // 每页大小
-  eventType?: string; // 事件类型
-  subType?: string; // 错误子类型
-  appId?: string; // 应用ID
+  apiKey?: string; // 项目API密钥
+  type?: string; // 事件类型
+  types?: string[]; // 多个事件类型
+  status?: string; // 状态
   userId?: string; // 用户ID
-  sessionId?: string; // 会话ID
-  url?: string; // URL模糊查询
-  level?: 'error' | 'warning' | 'info'; // 错误级别
-  status?: 'pending' | 'resolved' | 'ignored'; // 处理状态
-  startTime?: string; // 开始时间
-  endTime?: string; // 结束时间
-  keyword?: string; // 关键词搜索（错误消息、页面标题等）
+  uuid?: string; // 会话ID
+  pageUrl?: string; // URL模糊查询
+  startTime?: number; // 开始时间戳
+  endTime?: number; // 结束时间戳
+  httpStatus?: number; // HTTP状态码
+  fileName?: string; // 文件名
+  browser?: string; // 浏览器
+  os?: string; // 操作系统
+  deviceType?: string; // 设备类型
+  message?: string; // 错误消息
+  sortBy?: string; // 排序字段
+  sortOrder?: 'ASC' | 'DESC'; // 排序方向
 }
 
-// 错误报告统计数据
+// 统计概览响应
 export interface ErrorReportStats {
-  totalCount: number; // 总错误数
-  todayCount: number; // 今日错误数
-  pendingCount: number; // 待处理错误数
-  resolvedCount: number; // 已解决错误数
-  errorTrend: Array<{
-    // 错误趋势
-    date: string;
-    count: number;
-  }>;
-  topErrors: Array<{
-    // 高频错误
-    message: string;
-    count: number;
-    percentage: number;
-  }>;
-  browserStats: Array<{
-    // 浏览器分布
-    browser: string;
-    count: number;
-    percentage: number;
-  }>;
+  // 错误统计
+  errorCount: number;
+  jsErrorCount: number;
+  resourceErrorCount: number;
+  promiseErrorCount: number;
+  
+  // HTTP统计
+  httpRequestCount: number;
+  httpErrorCount: number;
+  avgResponseTime?: number;
+  
+  // 性能统计
+  avgFcp?: number;
+  avgLcp?: number;
+  avgFid?: number;
+  avgCls?: number;
+  
+  // 用户统计
+  sessionCount: number;
+  uniqueUsers: number;
+  pv: number;
+  whiteScreenCount: number;
+  
+  // 分布统计
+  deviceDistribution?: Record<string, number>;
+  browserDistribution?: Record<string, number>;
+  
+  [key: string]: any;
 }
 
-// 分页响应
+// 分页响应（通用）
 export interface ErrorReportListResponse {
-  list: ErrorReport[]; // 错误报告列表
+  data: ErrorReport[]; // 数据列表
   total: number; // 总数
   page: number; // 当前页
   pageSize: number; // 每页大小
-  totalPages: number; // 总页数
+  totalPages?: number; // 总页数
 }
