@@ -4,11 +4,16 @@ import App from './App.tsx';
 import './index.css';
 // import worker from './_mock';
 import lzMonitor from '@lz-monitor/core';
+import collectPerformance from '@lz-monitor/performance';
+
+// 初始化监控SDK
 lzMonitor.init({
   dsn: 'http://localhost:3001/monitor/report',
   apiKey: 'sdk-web',
   userId: 'lz'
 });
+// 收集性能指标
+collectPerformance();
 
 createRoot(document.getElementById('root')!).render(
   // <StrictMode>

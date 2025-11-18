@@ -120,6 +120,14 @@ export class MonitorQueryService {
   }
 
   /**
+   * 根据ID查询单条错误
+   */
+  async findErrorById(id: number): Promise<MonitorError | null> {
+    if (!id) return null;
+    return await this.monitorErrorRepository.findOne({ where: { id } });
+  }
+
+  /**
    * 查询HTTP请求列表
    */
   async findHttpRequests(query: any = {}) {

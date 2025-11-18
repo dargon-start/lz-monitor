@@ -10,3 +10,4 @@ export { Project } from './project.entity';
 
 // 保留原有的 MonitorEvent（用于兼容）
 export { MonitorEvent } from './monitor-event.entity';
+export { ErrorSolution } from './error-solution.entity';

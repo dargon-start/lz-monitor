@@ -3,6 +3,7 @@ import { CopyOutlined } from '@ant-design/icons';
 import { Button, Card, Descriptions, message, Modal, Tabs, Tag, Typography } from 'antd';
 
 import { BreadcrumbTimeline } from './BreadcrumbTimeline';
+import { ErrorSolutionPanel } from './ErrorSolutionPanel';
 
 interface ErrorDetailModalProps {
   visible: boolean;
@@ -57,6 +58,11 @@ export default function ErrorDetailModal({ visible, record, onClose }: ErrorDeta
           <Descriptions.Item label="IP地址">{record.ip || '未知'}</Descriptions.Item>
         </Descriptions>
       )
+    },
+    {
+      key: 'solution',
+      label: '解决方案',
+      children: <ErrorSolutionPanel errorId={record.id} errorHash={record.errorHash} />,
     },
     {
       key: 'error',

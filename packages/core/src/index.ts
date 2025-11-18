@@ -69,3 +69,6 @@ export default {
   use,
   log
 };
+
+// 导出 transportData 供其他模块使用
+export { transportData } from './core/index';

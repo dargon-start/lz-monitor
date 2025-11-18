@@ -224,6 +224,8 @@ export interface ErrorReportQuery {
   message?: string; // 错误消息
   sortBy?: string; // 排序字段
   sortOrder?: 'ASC' | 'DESC'; // 排序方向
+  metricName?: string; // 性能指标名称（FCP/LCP/CLS/INP/TTFB）
+  rating?: string; // 性能评级（good/needs-improvement/poor）
 }
 
 // 统计概览响应
@@ -261,6 +263,15 @@ export interface ErrorReportStats {
 // 分页响应（通用）
 export interface ErrorReportListResponse {
   data: ErrorReport[]; // 数据列表
+  total: number; // 总数
+  page: number; // 当前页
+  pageSize: number; // 每页大小
+  totalPages?: number; // 总页数
+}
+
+// 性能指标列表响应
+export interface PerformanceListResponse {
+  data: Performance[]; // 数据列表
   total: number; // 总数
   page: number; // 当前页
   pageSize: number; // 每页大小
