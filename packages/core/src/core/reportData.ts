@@ -2,13 +2,13 @@
 import { EVENTTYPES, SDK_VERSION } from '@lz-monitor/common';
 import { InitOptions, ReportData } from '@lz-monitor/types';
 import {
-  _support,
-  generateUUID,
-  getLocationHref,
-  isBrowserEnv,
-  isEmpty,
-  Queue,
-  validateOption
+    _support,
+    generateUUID,
+    getLocationHref,
+    isBrowserEnv,
+    isEmpty,
+    Queue,
+    validateOption
 } from '@lz-monitor/utils';
 import { breadcrumb } from './breadcrumb';
 import { options } from './options';
@@ -130,7 +130,7 @@ export class TransportData {
       return;
     }
     // 开启录屏，由@websee/recordScreen 插件控制
-    if (_support.options.silentRecordScreen) {
+    if (_support.options.enableRecordScreen) {
       if (options.recordScreenTypeList.includes(data.type)) {
         // 修改hasError
         _support.hasError = true;

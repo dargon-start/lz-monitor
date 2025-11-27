@@ -38,8 +38,8 @@ function install(Vue: VueInstance, options: InitOptions) {
 
 // react项目在ErrorBoundary中上报错误
 function errorBoundary(err: Error): void {
-  if (getFlag(EVENTTYPES.REACT)) return;
-  setFlag(EVENTTYPES.REACT, true);
+  // if (getFlag(EVENTTYPES.REACT)) return;
+  // setFlag(EVENTTYPES.REACT, true);
   HandleEvents.handleError(err);
 }
 
@@ -72,3 +72,4 @@ export default {
 
 // 导出 transportData 供其他模块使用
 export { transportData } from './core/index';
+

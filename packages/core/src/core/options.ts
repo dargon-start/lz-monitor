@@ -1,5 +1,5 @@
 import { InitOptions } from '@lz-monitor/types';
-import { _support, setSilentFlag, validateOption } from '@lz-monitor/utils';
+import { _support, setEnableFlag, validateOption } from '@lz-monitor/utils';
 import { breadcrumb } from './breadcrumb';
 import { transportData } from './reportData';
 
@@ -9,7 +9,7 @@ export class Options {
   throttleDelayTime = 0; // click事件的节流时长
   overTime = 10; // 接口超时时长
   whiteBoxElements: string[] = ['html', 'body', '#app', '#root']; // 白屏检测的容器列表
-  silentWhiteScreen = false; // 是否开启白屏检测
+  enableWhiteScreen = true; // 是否开启白屏检测
   skeletonProject = false; // 项目是否有骨架屏
   filterXhrUrlRegExp: any; // 过滤的接口请求正则
   handleHttpStatus: any; // 处理接口返回的 response
@@ -22,7 +22,7 @@ export class Options {
       filterXhrUrlRegExp,
       throttleDelayTime = 0,
       overTime = 10,
-      silentWhiteScreen = false,
+      enableWhiteScreen = true,
       whiteBoxElements = ['html', 'body', '#app', '#root'],
       skeletonProject = false,
       handleHttpStatus,
@@ -45,8 +45,8 @@ export class Options {
         type: 'regexp'
       },
       {
-        value: silentWhiteScreen,
-        name: 'silentWhiteScreen',
+        value: enableWhiteScreen,
+        name: 'enableWhiteScreen',
         type: 'boolean'
       },
       {
@@ -93,8 +93,8 @@ export class Options {
 const options = _support.options || (_support.options = new Options());
 
 export function handleOptions(paramOptions: InitOptions): void {
-  // setSilentFlag 给全局添加已设置的标识，防止重复设置
-  setSilentFlag(paramOptions);
+  // 给全局添加已设置的标识，防止重复设置
+  setEnableFlag(paramOptions);
   // 设置用户行为的配置项
   breadcrumb.bindOptions(paramOptions);
   // transportData 配置上报的信息
@@ -104,3 +104,4 @@ export function handleOptions(paramOptions: InitOptions): void {
 }
 
 export { options };
+

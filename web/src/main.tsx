@@ -3,16 +3,18 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 // import worker from './_mock';
-import lzMonitor from '../../packages/core/dist/index.esm.js';
-// import lzMonitor from '@lz-monitor/core';
+// import lzMonitor from '../../packages/core/dist/index.esm.js';
+import lzMonitor from '@lz-monitor/core';
 import collectPerformance from '@lz-monitor/performance';
 
 // 初始化监控SDK
 lzMonitor.init({
   dsn: 'http://localhost:3001/monitor/report',
   apiKey: 'sdk-web',
-  userId: 'lz'
+  userId: 'lz',
+  // enableError: false,
 });
+
 // 收集性能指标
 collectPerformance();
 

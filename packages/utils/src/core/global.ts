@@ -33,14 +33,18 @@ _support.errorMap = new Map();
 
 _support.replaceFlag = _support.replaceFlag || {};
 
+// replaceFlag 存储类型订阅，决定开启或关闭哪些类型的监控功能
 const replaceFlag = _support.replaceFlag;
+
 export function setFlag(replaceType: string, isSet: boolean) {
   if (replaceFlag[replaceType]) return;
   replaceFlag[replaceType] = isSet;
 }
+
 export function getFlag(replaceType: string) {
-  return replaceFlag[replaceType] ? true : false;
+  return replaceFlag[replaceType];
 }
+
 // 获取全部变量__monitor__的引用地址
 export function getGlobalSupport() {
   _global._monitor_ = _global._monitor_ || ({} as Monitor);
