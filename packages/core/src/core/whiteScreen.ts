@@ -4,7 +4,7 @@ import { _global, _support } from '@lz-monitor/utils';
 
 /**
  * 检测页面是否白屏
- * @param {function} callback - 回到函数获取检测结果
+ * @param {function} callback - 回调函数获取检测结果（上报检测值）
  * @param {boolean} skeletonProject - 页面是否有骨架屏
  * @param {array} whiteBoxElements - 容器列表，默认值为['html', 'body', '#app', '#root']
  */
@@ -74,7 +74,6 @@ export function openWhiteScreen(
         if (isContainer(yElements[0] as HTMLElement)) emptyPoints++;
       }
     }
-    // console.log('_skeletonInitList', _skeletonInitList, _skeletonNowList);
 
     // 页面正常渲染，停止轮训
     if (emptyPoints != 17) {
@@ -82,13 +81,13 @@ export function openWhiteScreen(
         // 第一次不比较
         if (!_whiteLoopNum) return openWhiteLoop();
         // 比较前后dom是否一致
-        if (_skeletonNowList.join() == _skeletonInitList.join())
+        if (_skeletonNowList.join() === _skeletonInitList.join())
           return callback({
             status: STATUS_CODE.ERROR
           });
       }
       if (_support._loopTimer) {
-        clearTimeout(_support._loopTimer);
+        clearInterval(_support._loopTimer);
         _support._loopTimer = null;
       }
     } else {
@@ -114,6 +113,7 @@ export function openWhiteScreen(
     }, 1000);
   }
   function idleCallback() {
+    // 判断浏览器是否支持requestIdleCallback
     if ('requestIdleCallback' in _global) {
       requestIdleCallback(deadline => {
         // timeRemaining：表示当前空闲时间的剩余时间

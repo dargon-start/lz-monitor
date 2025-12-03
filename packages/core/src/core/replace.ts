@@ -17,6 +17,7 @@ import { notify, options, subscribeEvent, transportData } from './index';
 function isFilterHttpUrl(url: string): boolean {
   return options.filterXhrUrlRegExp && options.filterXhrUrlRegExp.test(url);
 }
+
 function replace(type: EVENTTYPES): void {
   switch (type) {
     case EVENTTYPES.WHITESCREEN:
@@ -51,6 +52,7 @@ export function addReplaceHandler(handler: ReplaceHandler): void {
   if (!subscribeEvent(handler)) return;
   replace(handler.type);
 }
+
 function xhrReplace(): void {
   if (!('XMLHttpRequest' in _global)) {
     return;
@@ -100,6 +102,7 @@ function xhrReplace(): void {
     };
   });
 }
+
 function fetchReplace(): void {
   if (!('fetch' in _global)) {
     return;
@@ -166,6 +169,7 @@ function fetchReplace(): void {
     };
   });
 }
+
 function listenHashchange(): void {
   // 通过onpopstate事件，来监听hash模式下路由的变化
   if (isExistProperty(_global, 'onhashchange')) {
@@ -223,12 +227,14 @@ function historyReplace(): void {
   replaceAop(_global.history, 'pushState', historyReplaceFn);
   replaceAop(_global.history, 'replaceState', historyReplaceFn);
 }
+
 function unhandledrejectionReplace(): void {
   on(_global, EVENTTYPES.UNHANDLEDREJECTION, function (ev: PromiseRejectionEvent) {
     // ev.preventDefault() 阻止默认行为后，控制台就不会再报红色错误
     notify(EVENTTYPES.UNHANDLEDREJECTION, ev);
   });
 }
+
 function domReplace(): void {
   if (!('document' in _global)) return;
   // 节流，默认0s
@@ -246,6 +252,7 @@ function domReplace(): void {
     true // 使用捕获阶段
   );
 }
+
 function whiteScreen(): void {
   notify(EVENTTYPES.WHITESCREEN);
 }

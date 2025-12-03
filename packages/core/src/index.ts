@@ -53,7 +53,8 @@ function use(plugin: any, option: any) {
       type: instance.type
     })
   )
-    return;
+  
+  return;
 
   nativeTryCatch(() => {
     instance.core({ transportData, breadcrumb, options, notify });
