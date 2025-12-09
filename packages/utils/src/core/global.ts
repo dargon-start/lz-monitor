@@ -50,6 +50,7 @@ export function getGlobalSupport() {
   _global._monitor_ = _global._monitor_ || ({} as Monitor);
   return _global._monitor_;
 }
+
 export function supportsHistory(): boolean {
   const chrome = _global.chrome;
   const isChromePackagedApp = chrome && chrome.app && chrome.app.runtime;

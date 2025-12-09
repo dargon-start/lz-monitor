@@ -69,6 +69,7 @@ function xhrReplace(): void {
       originalOpen.apply(this, args);
     };
   });
+  
   replaceAop(originalXhrProto, 'send', (originalSend: voidFun) => {
     return function (this: any, ...args: any[]): void {
       const { method, url } = this.websee_xhr;
@@ -76,11 +77,9 @@ function xhrReplace(): void {
       on(this, 'loadend', function (this: any) {
         // isSdkTransportUrl 判断当前接口是否为上报的接口
         // isFilterHttpUrl 判断当前接口是否为需要过滤掉的接口
-        if (
-          (method === EMethods.Post && transportData.isSdkTransportUrl(url)) ||
-          isFilterHttpUrl(url)
-        )
-          return;
+        if ((method === EMethods.Post && transportData.isSdkTransportUrl(url)) 
+          || isFilterHttpUrl(url)) return;
+
         const { responseType, response, status } = this;
         this.websee_xhr.requestData = args[0];
         const eTime = getTimestamp();
@@ -159,7 +158,7 @@ function fetchReplace(): void {
             return;
           fetchData = Object.assign({}, fetchData, {
             elapsedTime: eTime - sTime,
-            status: 0,
+            Status: 0,
             time: sTime
           });
           notify(EVENTTYPES.FETCH, fetchData);
@@ -197,7 +196,8 @@ function historyReplace(): void {
   // 是否支持history
   if (!supportsHistory()) return;
   const oldOnpopstate = _global.onpopstate;
-  // 添加 onpopstate事件
+  // 添加 onpopstate事件 浏览器页面回退，或使用history.back(),history.go()等方法时触发
+  // 但是pushState，replaceState不会触发
   _global.onpopstate = function (this: any, ...args: any): void {
     const to = getLocationHref();
     const from = lastHref;
@@ -208,6 +208,7 @@ function historyReplace(): void {
     });
     oldOnpopstate && oldOnpopstate.apply(this, args);
   };
+  
   function historyReplaceFn(originalHistoryFn: voidFun): voidFun {
     return function (this: any, ...args: any[]): void {
       const url = args.length > 2 ? args[2] : undefined;

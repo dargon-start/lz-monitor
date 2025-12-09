@@ -12,7 +12,7 @@ export class Options {
   enableWhiteScreen = true; // 是否开启白屏检测
   skeletonProject = false; // 项目是否有骨架屏
   filterXhrUrlRegExp: any; // 过滤的接口请求正则
-  handleHttpStatus: any; // 处理接口返回的 response
+  handleHttpStatus: any; // 处理接口返回的 response，return boolean 返回接口状态是否成功
   repeatCodeError = false; // 是否去除重复的代码错误，重复的错误只上报一次
   constructor() {}
   bindOptions(options: InitOptions): void {

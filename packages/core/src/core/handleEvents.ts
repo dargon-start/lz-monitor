@@ -23,10 +23,16 @@ const HandleEvents = {
     console.log('Error occurred:', event);
 
     const target = event.target;
+    
+    // 区分导致错误的目标是否为 DOM 元素 (资源加载错误会有 localName，如 img/script)
+    // 如果没有 target 或者 target 没有 localName，则认为是 JS 执行错误
     if (!target || (event.target && !event.target.localName)) {
       // vue和react捕获的报错使用event解析，异步错误使用event.error解析
+      // ErrorStackParser 用于解析错误堆栈，获取文件名、行列号
       const stackFrame = ErrorStackParser.parse(!target ? event : event.error)[0];
       const { fileName, columnNumber, lineNumber } = stackFrame;
+      
+      // 组装错误上报数据
       const errorData = {
         type: EVENTTYPES.ERROR,
         status: STATUS_CODE.ERROR,
@@ -36,6 +42,8 @@ const HandleEvents = {
         line: lineNumber,
         column: columnNumber
       };
+
+      // 将错误记录添加到行为栈（面包屑）中
       breadcrumb.push({
         type: EVENTTYPES.ERROR,
         category: breadcrumb.getCategory(EVENTTYPES.ERROR),
@@ -43,19 +51,25 @@ const HandleEvents = {
         time: getTimestamp(),
         status: STATUS_CODE.ERROR
       });
+
+      // 生成错误的唯一 hash，用于去重判断
       const hash: string = getErrorUid(
         `${EVENTTYPES.ERROR}-${event.message}-${fileName}-${columnNumber}`
       );
+      
       // 开启repeatCodeError第一次报错才上报
+      // 如果允许重复上报，或者该错误 hash 尚未存在（即第一次出现），则进行上报
       if (!options.repeatCodeError || (options.repeatCodeError && !hashMapExist(hash))) {
         return transportData.send(errorData);
       }
     }
 
-    // 资源加载报错
+    // 资源加载报错 (target 存在且有 localName)
     if (target?.localName) {
-      // 提取资源加载的信息
+      // 提取资源加载的详细信息
       const data = resourceTransform(target);
+      
+      // 记录资源错误到行为栈
       breadcrumb.push({
         type: EVENTTYPES.RESOURCE,
         category: breadcrumb.getCategory(EVENTTYPES.RESOURCE),
@@ -63,6 +77,8 @@ const HandleEvents = {
         time: getTimestamp(),
         data
       });
+      
+      // 上报资源加载错误
       return transportData.send({
         ...data,
         type: EVENTTYPES.RESOURCE,
