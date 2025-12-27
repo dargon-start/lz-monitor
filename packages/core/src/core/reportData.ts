@@ -25,12 +25,15 @@ export class TransportData {
   beforeDataReport: any; // 上报数据前的hook
   getUserId: any; // 用户自定义获取userId的方法
   useImgUpload = false; // 是否使用图片打点上报
+
   constructor() {
     this.uuid = generateUUID(); // 每次页面加载的唯一标识
   }
+
   beacon(url: string, data: any): boolean {
     return navigator.sendBeacon(url, JSON.stringify(data));
   }
+
   imgRequest(data: ReportData, url: string): void {
     const requestFun = () => {
       const img = new Image();
@@ -49,6 +52,7 @@ export class TransportData {
     }
     return transportData;
   }
+
   async xhrPost(data: ReportData, url: string): Promise<void> {
     const requestFun = () => {
       fetch(`${url}`, {
@@ -61,6 +65,7 @@ export class TransportData {
     };
     this.queue.addFn(requestFun);
   }
+
   // 获取用户信息
   getAuthInfo() {
     return {
@@ -69,6 +74,7 @@ export class TransportData {
       apiKey: this.apiKey
     };
   }
+
   getAuthId(): string | number {
     if (typeof this.getUserId === 'function') {
       const id = this.getUserId();
@@ -130,7 +136,7 @@ export class TransportData {
       return;
     }
     // 开启录屏，由@websee/recordScreen 插件控制
-    if (_support.options.silentRecordScreen) {
+    if (_support.options.enableRecordScreen) {
       if (options.recordScreenTypeList.includes(data.type)) {
         // 修改hasError
         _support.hasError = true;

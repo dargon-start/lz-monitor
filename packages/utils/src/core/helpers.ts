@@ -118,3 +118,8 @@ export function interceptStr(str: string, interceptLength: number): string {
   }
   return '';
 }
+
+export function getFunctionName(fn: any): string {
+  if (!fn || typeof fn !== 'function') return 'anonymous';
+  return fn.name || 'anonymous';
+}

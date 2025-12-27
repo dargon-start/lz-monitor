@@ -1,6 +1,6 @@
 import { EVENTTYPES } from '@lz-monitor/common';
 import { ReplaceCallback, ReplaceHandler } from '@lz-monitor/types';
-import { getFlag, nativeTryCatch, setFlag } from '@lz-monitor/utils';
+import { getFlag, getFunctionName, nativeTryCatch, setFlag } from '@lz-monitor/utils';
 
 const handlers: { [key in EVENTTYPES]?: ReplaceCallback[] } = {};
 
@@ -12,6 +12,7 @@ export function subscribeEvent(handler: ReplaceHandler): boolean {
   handlers[handler.type]?.push(handler.callback);
   return true;
 }
+
 export function notify(type: EVENTTYPES, data?: any): void {
   if (!type || !handlers[type]) return;
   // 获取对应事件的回调函数并执行，回调函数为addReplaceHandler事件中定义的事件
@@ -20,12 +21,12 @@ export function notify(type: EVENTTYPES, data?: any): void {
       () => {
         callback(data);
       },
-      () => {
-        // console.error(
-        //   `lz-monitor 重写事件notify的回调函数发生错误\nType:${type}\nName: ${getFunctionName(
-        //     callback
-        //   )}\nError: ${e}`
-        // );
+      (e: Error) => {
+        console.error(
+          `lz-monitor 重写事件notify的回调函数发生错误\nType:${type}\nName: ${getFunctionName(
+            callback
+          )}\nError: ${e}`
+        );
       }
     );
   });

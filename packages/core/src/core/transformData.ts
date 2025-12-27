@@ -16,6 +16,7 @@ export function httpTransform(data: HttpData): HttpData {
       elapsedTime <= options.overTime * 1000
         ? `请求失败，Status值为:${Status}`
         : '请求失败，接口超时';
+        
   } else if ((Status as number) < HTTP_CODE.BAD_REQUEST) {
     status = STATUS_CODE.OK;
     if (options.handleHttpStatus && typeof options.handleHttpStatus == 'function') {

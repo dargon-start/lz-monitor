@@ -38,8 +38,8 @@ function install(Vue: VueInstance, options: InitOptions) {
 
 // react项目在ErrorBoundary中上报错误
 function errorBoundary(err: Error): void {
-  if (getFlag(EVENTTYPES.REACT)) return;
-  setFlag(EVENTTYPES.REACT, true);
+  // if (getFlag(EVENTTYPES.REACT)) return;
+  // setFlag(EVENTTYPES.REACT, true);
   HandleEvents.handleError(err);
 }
 
@@ -53,7 +53,8 @@ function use(plugin: any, option: any) {
       type: instance.type
     })
   )
-    return;
+  
+  return;
 
   nativeTryCatch(() => {
     instance.core({ transportData, breadcrumb, options, notify });
@@ -69,3 +70,7 @@ export default {
   use,
   log
 };
+
+// 导出 transportData 供其他模块使用
+export { transportData } from './core/index';
+

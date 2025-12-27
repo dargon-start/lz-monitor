@@ -124,6 +124,74 @@ export default function MyList() {
 - ✅ 延迟计算策略，确保 DOM 完全渲染后再计算
 - ✅ 开箱即用，极简 API
 
+## SDK 使用指南
+
+### 性能指标上报
+
+LZ Monitor SDK 支持自动收集和上报网站性能指标，包括：
+
+- **FCP (First Contentful Paint)**: 首次内容绘制时间
+- **LCP (Largest Contentful Paint)**: 最大内容绘制时间
+- **CLS (Cumulative Layout Shift)**: 累积布局偏移
+- **INP (Interaction to Next Paint)**: 交互延迟
+- **TTFB (Time To First Byte)**: 首字节时间
+
+#### 初始化 SDK
+
+```typescript
+import Monitor from '@lz-monitor/core';
+import collectPerformance from '@lz-monitor/performance';
+
+// 初始化监控 SDK
+Monitor.init({
+  dsn: 'http://localhost:3001/monitor/report', // 上报接口地址
+  apiKey: 'your-api-key', // 项目唯一标识
+  userId: 'user-123' // 可选：用户ID
+});
+
+// 启用性能指标收集
+collectPerformance();
+```
+
+#### 配置说明
+
+**必需参数：**
+
+- `dsn`: 监控数据上报接口地址
+- `apiKey`: 项目唯一标识，用于区分不同项目
+
+**可选参数：**
+
+- `userId`: 用户ID，用于关联用户行为
+- `beforeDataReport`: 数据上报前的钩子函数，可用于数据过滤或修改
+- `useImgUpload`: 是否使用图片打点上报（默认 false，使用 sendBeacon/fetch）
+
+#### 性能指标说明
+
+| 指标 | 说明             | 良好阈值 | 需要改进阈值  |
+| ---- | ---------------- | -------- | ------------- |
+| FCP  | 首次内容绘制时间 | < 1.8s   | 1.8s - 3.0s   |
+| LCP  | 最大内容绘制时间 | < 2.5s   | 2.5s - 4.0s   |
+| CLS  | 累积布局偏移     | < 0.1    | 0.1 - 0.25    |
+| INP  | 交互延迟         | < 200ms  | 200ms - 500ms |
+| TTFB | 首字节时间       | < 0.8s   | 0.8s - 1.8s   |
+
+#### 数据上报流程
+
+1. web-vitals 库自动收集性能指标
+2. 指标数据转换为 ReportData 格式
+3. 通过 `transportData.send()` 上报到服务端
+4. SDK 自动添加公共信息（apiKey、uuid、pageUrl、deviceInfo等）
+5. 优先使用 `sendBeacon` 上报，失败时降级到 `fetch` 或图片打点
+6. 后端接收数据并保存到 `monitor_performance` 表
+
+#### 注意事项
+
+- 性能指标会在页面加载和交互时自动收集，无需手动触发
+- 每个指标收集到后会立即上报，不会批量上报
+- 性能数据不会附带用户行为栈（breadcrumb），以减少数据量
+- 确保在调用 `collectPerformance()` 之前已经初始化 SDK（调用 `Monitor.init()`）
+
 ## 快速开始
 
 ### 1. 数据库初始化

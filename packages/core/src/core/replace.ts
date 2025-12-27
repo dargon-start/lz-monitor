@@ -17,6 +17,7 @@ import { notify, options, subscribeEvent, transportData } from './index';
 function isFilterHttpUrl(url: string): boolean {
   return options.filterXhrUrlRegExp && options.filterXhrUrlRegExp.test(url);
 }
+
 function replace(type: EVENTTYPES): void {
   switch (type) {
     case EVENTTYPES.WHITESCREEN:
@@ -51,6 +52,7 @@ export function addReplaceHandler(handler: ReplaceHandler): void {
   if (!subscribeEvent(handler)) return;
   replace(handler.type);
 }
+
 function xhrReplace(): void {
   if (!('XMLHttpRequest' in _global)) {
     return;
@@ -67,6 +69,7 @@ function xhrReplace(): void {
       originalOpen.apply(this, args);
     };
   });
+  
   replaceAop(originalXhrProto, 'send', (originalSend: voidFun) => {
     return function (this: any, ...args: any[]): void {
       const { method, url } = this.websee_xhr;
@@ -74,11 +77,9 @@ function xhrReplace(): void {
       on(this, 'loadend', function (this: any) {
         // isSdkTransportUrl 判断当前接口是否为上报的接口
         // isFilterHttpUrl 判断当前接口是否为需要过滤掉的接口
-        if (
-          (method === EMethods.Post && transportData.isSdkTransportUrl(url)) ||
-          isFilterHttpUrl(url)
-        )
-          return;
+        if ((method === EMethods.Post && transportData.isSdkTransportUrl(url)) 
+          || isFilterHttpUrl(url)) return;
+
         const { responseType, response, status } = this;
         this.websee_xhr.requestData = args[0];
         const eTime = getTimestamp();
@@ -100,6 +101,7 @@ function xhrReplace(): void {
     };
   });
 }
+
 function fetchReplace(): void {
   if (!('fetch' in _global)) {
     return;
@@ -156,7 +158,7 @@ function fetchReplace(): void {
             return;
           fetchData = Object.assign({}, fetchData, {
             elapsedTime: eTime - sTime,
-            status: 0,
+            Status: 0,
             time: sTime
           });
           notify(EVENTTYPES.FETCH, fetchData);
@@ -166,6 +168,7 @@ function fetchReplace(): void {
     };
   });
 }
+
 function listenHashchange(): void {
   // 通过onpopstate事件，来监听hash模式下路由的变化
   if (isExistProperty(_global, 'onhashchange')) {
@@ -193,7 +196,8 @@ function historyReplace(): void {
   // 是否支持history
   if (!supportsHistory()) return;
   const oldOnpopstate = _global.onpopstate;
-  // 添加 onpopstate事件
+  // 添加 onpopstate事件 浏览器页面回退，或使用history.back(),history.go()等方法时触发
+  // 但是pushState，replaceState不会触发
   _global.onpopstate = function (this: any, ...args: any): void {
     const to = getLocationHref();
     const from = lastHref;
@@ -204,6 +208,7 @@ function historyReplace(): void {
     });
     oldOnpopstate && oldOnpopstate.apply(this, args);
   };
+  
   function historyReplaceFn(originalHistoryFn: voidFun): voidFun {
     return function (this: any, ...args: any[]): void {
       const url = args.length > 2 ? args[2] : undefined;
@@ -223,12 +228,14 @@ function historyReplace(): void {
   replaceAop(_global.history, 'pushState', historyReplaceFn);
   replaceAop(_global.history, 'replaceState', historyReplaceFn);
 }
+
 function unhandledrejectionReplace(): void {
   on(_global, EVENTTYPES.UNHANDLEDREJECTION, function (ev: PromiseRejectionEvent) {
     // ev.preventDefault() 阻止默认行为后，控制台就不会再报红色错误
     notify(EVENTTYPES.UNHANDLEDREJECTION, ev);
   });
 }
+
 function domReplace(): void {
   if (!('document' in _global)) return;
   // 节流，默认0s
@@ -246,6 +253,7 @@ function domReplace(): void {
     true // 使用捕获阶段
   );
 }
+
 function whiteScreen(): void {
   notify(EVENTTYPES.WHITESCREEN);
 }

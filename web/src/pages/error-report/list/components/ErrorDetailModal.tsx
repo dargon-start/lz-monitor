@@ -2,6 +2,9 @@ import type { ErrorReport } from '@/api/error-report/error-report.type';
 import { CopyOutlined } from '@ant-design/icons';
 import { Button, Card, Descriptions, message, Modal, Tabs, Tag, Typography } from 'antd';
 
+import { BreadcrumbTimeline } from './BreadcrumbTimeline';
+import { ErrorSolutionPanel } from './ErrorSolutionPanel';
+
 interface ErrorDetailModalProps {
   visible: boolean;
   record: ErrorReport | null;
@@ -17,27 +20,6 @@ export default function ErrorDetailModal({ visible, record, onClose }: ErrorDeta
       message.success(`${label}已复制到剪贴板`);
     });
   };
-
-  // JSON 展示组件
-  const JsonView = ({ data, title }: { data: any; title: string }) => (
-    <Card
-      size="small"
-      title={title}
-      extra={
-        <Button
-          size="small"
-          icon={<CopyOutlined />}
-          onClick={() => handleCopy(JSON.stringify(data, null, 2), title)}
-        >
-          复制
-        </Button>
-      }
-    >
-      <pre className="bg-gray-50 p-3 rounded text-sm max-h-60 overflow-auto m-0">
-        {JSON.stringify(data, null, 2)}
-      </pre>
-    </Card>
-  );
 
   const tabItems = [
     {
@@ -76,6 +58,11 @@ export default function ErrorDetailModal({ visible, record, onClose }: ErrorDeta
           <Descriptions.Item label="IP地址">{record.ip || '未知'}</Descriptions.Item>
         </Descriptions>
       )
+    },
+    {
+      key: 'solution',
+      label: '解决方案',
+      children: <ErrorSolutionPanel errorId={record.id} errorHash={record.errorHash} />,
     },
     {
       key: 'error',
@@ -135,7 +122,7 @@ export default function ErrorDetailModal({ visible, record, onClose }: ErrorDeta
       label: '用户行为',
       children:
         record.breadcrumb && record.breadcrumb.length > 0 ? (
-          <JsonView data={record.breadcrumb} title="用户行为栈" />
+          <BreadcrumbTimeline breadcrumbs={record.breadcrumb} />
         ) : (
           <div className="text-center py-8 text-gray-400">暂无用户行为数据</div>
         )
@@ -208,9 +195,10 @@ export default function ErrorDetailModal({ visible, record, onClose }: ErrorDeta
       onCancel={onClose}
       footer={null}
       width={1000}
+      height={800}
       style={{ top: 20 }}
     >
-      <div className="max-h-[75vh] overflow-auto">
+      <div className="h-[70vh] overflow-auto">
         <Tabs defaultActiveKey="basic" items={tabItems} />
       </div>
     </Modal>

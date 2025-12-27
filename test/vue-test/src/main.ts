@@ -7,7 +7,7 @@ const app = createApp(App);
 app.use(lzMonitor, {
   dsn: 'http://localhost:3001/error/report',
   apiKey: 'vue-test',
-  silentWhiteScreen: true,
+  enableWhiteScreen: false,
   skeletonProject: true,
   repeatCodeError: true,
   userId: 'lz'

@@ -3,7 +3,8 @@ import type {
   CreateErrorReportDto,
   ErrorReportListResponse,
   ErrorReportQuery,
-  ErrorReportStats
+  ErrorReportStats,
+  PerformanceListResponse
 } from './error-report.type';
 
 /**
@@ -30,7 +31,7 @@ export const getHttpRequestList = (params: ErrorReportQuery) => {
  * 获取性能指标列表
  */
 export const getPerformanceList = (params: ErrorReportQuery) => {
-  return request.get<ErrorReportListResponse>({
+  return request.get<PerformanceListResponse>({
     url: '/monitor/performance',
     params
   });
@@ -67,5 +68,27 @@ export const createErrorReport = (data: CreateErrorReportDto) => {
   return request.post<{ success: boolean; message: string }>({
     url: '/monitor/report',
     data
+  });
+};
+
+// 获取错误解决方案
+export const getErrorSolution = (errorId: number) => {
+  return request.get<any>({
+    url: `/monitor/errors/${errorId}/solution`
+  });
+};
+
+// 触发GPT分析错误
+export const analyzeError = (errorId: number) => {
+  return request.post<any>({
+    url: `/monitor/errors/${errorId}/analyze`
+  });
+};
+
+// 保存或更新解决方案
+export const saveErrorSolution = (errorId: number, solution: string) => {
+  return request.post<any>({
+    url: `/monitor/errors/${errorId}/solution`,
+    data: { solution }
   });
 };

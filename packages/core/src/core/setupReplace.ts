@@ -39,6 +39,13 @@ export function setupReplace(): void {
     },
     type: EVENTTYPES.HISTORY
   });
+  // 监听hashchange
+  addReplaceHandler({
+    callback: (e: HashChangeEvent) => {
+      HandleEvents.handleHashchange(e);
+    },
+    type: EVENTTYPES.HASHCHANGE
+  });
   // 添加handleUnhandleRejection事件
   addReplaceHandler({
     callback: data => {
@@ -63,11 +70,5 @@ export function setupReplace(): void {
     },
     type: EVENTTYPES.CLICK
   });
-  // 监听hashchange
-  addReplaceHandler({
-    callback: (e: HashChangeEvent) => {
-      HandleEvents.handleHashchange(e);
-    },
-    type: EVENTTYPES.HASHCHANGE
-  });
+  
 }

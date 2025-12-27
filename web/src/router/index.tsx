@@ -31,7 +31,7 @@ const PROTECTED_ROUTE = [
     children: [
       {
         index: true,
-        element: <Navigate to="/login" replace />
+        element: <Navigate to="/error-report/list" replace />
       }
     ]
   },

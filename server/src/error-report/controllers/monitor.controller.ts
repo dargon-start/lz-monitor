@@ -4,7 +4,9 @@ import {
   Get,
   Inject,
   Logger,
+  NotFoundException,
   Optional,
+  Param,
   Post,
   Query,
   ValidationPipe,
@@ -13,6 +15,7 @@ import { REQUEST } from '@nestjs/core';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { CreateMonitorEventDto } from '../dto/create-monitor-event.dto';
+import { ErrorSolutionService } from '../services/error-solution.service';
 import { MonitorDataService } from '../services/monitor-data.service';
 import { MonitorQueryService } from '../services/monitor-query.service';
 
@@ -24,6 +27,7 @@ export class MonitorController {
   constructor(
     private readonly monitorDataService: MonitorDataService,
     private readonly monitorQueryService: MonitorQueryService,
+    private readonly errorSolutionService: ErrorSolutionService,
     @Optional() @Inject(REQUEST) private readonly request: Request,
   ) {}
 
@@ -117,6 +121,81 @@ export class MonitorController {
   @ApiOperation({ summary: '查询错误列表' })
   async findErrors(@Query() query: any) {
     return this.monitorQueryService.findErrors(query);
+  }
+
+  /**
+   * 获取指定错误的解决方案
+   */
+  @Get('errors/:id/solution')
+  @ApiOperation({ summary: '获取错误解决方案' })
+  async getErrorSolution(@Param('id') id: string) {
+    const error = await this.monitorQueryService.findErrorById(Number(id));
+    if (!error || !error.errorHash) {
+      throw new NotFoundException('错误记录不存在');
+    }
+    const solution = await this.errorSolutionService.getSolutionByErrorHash(
+      error.errorHash,
+    );
+    return {
+      solution: solution?.solution || null,
+      gptAnalysis: solution?.gptAnalysis
+        ? JSON.parse(solution.gptAnalysis)
+        : null,
+      isManual: solution?.isManual === 1,
+      createdAt: solution?.createdAt,
+      updatedAt: solution?.updatedAt,
+    };
+  }
+
+  /**
+   * 让GPT分析错误并保存解决方案
+   */
+  @Post('errors/:id/analyze')
+  @ApiOperation({ summary: '使用GPT分析错误' })
+  async analyzeError(@Param('id') id: string) {
+    const error = await this.monitorQueryService.findErrorById(Number(id));
+    if (!error || !error.errorHash) {
+      throw new NotFoundException('错误记录不存在');
+    }
+    const saved = await this.errorSolutionService.analyzeWithGpt(
+      error.errorHash,
+      {
+        errorType: error.errorType,
+        message: error.message || '',
+        stack: (error as any).stack,
+        fileName: error.fileName,
+        line: error.line,
+        column: error.column,
+        pageUrl: error.pageUrl,
+        breadcrumb: error.breadcrumb as any,
+      },
+    );
+    return {
+      solution: saved.solution,
+      gptAnalysis: saved.gptAnalysis ? JSON.parse(saved.gptAnalysis) : null,
+      isManual: saved.isManual === 1,
+    };
+  }
+
+  /**
+   * 手动保存解决方案
+   */
+  @Post('errors/:id/solution')
+  @ApiOperation({ summary: '保存或更新解决方案' })
+  async saveSolution(
+    @Param('id') id: string,
+    @Body() body: { solution: string; updatedBy?: string },
+  ) {
+    const error = await this.monitorQueryService.findErrorById(Number(id));
+    if (!error || !error.errorHash) {
+      throw new NotFoundException('错误记录不存在');
+    }
+    const saved = await this.errorSolutionService.saveManualSolution(
+      error.errorHash,
+      body.solution,
+      body.updatedBy,
+    );
+    return { success: true, solution: saved.solution };
   }
 
   /**

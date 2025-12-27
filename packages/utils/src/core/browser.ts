@@ -45,24 +45,25 @@ export function parseUrlToObj(url: string) {
   };
 }
 
-export function setSilentFlag({
-  silentXhr = true,
-  silentFetch = true,
-  silentClick = true,
-  silentHistory = true,
-  silentError = true,
-  silentHashchange = true,
-  silentUnhandledrejection = true,
-  silentWhiteScreen = false
+export function setEnableFlag({
+  enableXhr = true,
+  enableFetch = true,
+  enableClick = true,
+  enableHistory = true,
+  enableError = true,
+  enableHashchange = true,
+  enableUnhandledrejection = true,
+  enableWhiteScreen = false
 }): void {
-  setFlag(EVENTTYPES.XHR, !silentXhr);
-  setFlag(EVENTTYPES.FETCH, !silentFetch);
-  setFlag(EVENTTYPES.CLICK, !silentClick);
-  setFlag(EVENTTYPES.HISTORY, !silentHistory);
-  setFlag(EVENTTYPES.ERROR, !silentError);
-  setFlag(EVENTTYPES.HASHCHANGE, !silentHashchange);
-  setFlag(EVENTTYPES.UNHANDLEDREJECTION, !silentUnhandledrejection);
-  setFlag(EVENTTYPES.WHITESCREEN, !silentWhiteScreen);
+  // console.log('setEnableFlag:', enableXhr, enableFetch, enableClick, enableHistory, enableError, enableHashchange, enableUnhandledrejection, enableWhiteScreen);
+  setFlag(EVENTTYPES.XHR, !enableXhr);
+  setFlag(EVENTTYPES.FETCH, !enableFetch);
+  setFlag(EVENTTYPES.CLICK, !enableClick);
+  setFlag(EVENTTYPES.HISTORY, !enableHistory);
+  setFlag(EVENTTYPES.ERROR, !enableError);
+  setFlag(EVENTTYPES.HASHCHANGE, !enableHashchange);
+  setFlag(EVENTTYPES.UNHANDLEDREJECTION, !enableUnhandledrejection);
+  setFlag(EVENTTYPES.WHITESCREEN, !enableWhiteScreen);
 }
 
 // 对每一个错误详情，生成唯一的编码

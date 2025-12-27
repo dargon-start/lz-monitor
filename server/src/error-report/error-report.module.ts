@@ -6,6 +6,8 @@ import { TextPlainMiddleware } from './middleware/text-plain.middleware';
 import { MonitorController } from './controllers/monitor.controller';
 import { MonitorDataService } from './services/monitor-data.service';
 import { MonitorQueryService } from './services/monitor-query.service';
+import { ErrorSolutionService } from './services/error-solution.service';
+import { GptAnalysisService } from './services/gpt-analysis.service';
 
 // 导入所有 Entity
 import {
@@ -18,6 +20,7 @@ import {
   MonitorStatisticsDaily,
   MonitorWhiteScreen,
   Project,
+  ErrorSolution,
 } from './entities';
 
 @Module({
@@ -34,10 +37,11 @@ import {
       MonitorSession,
       MonitorRecordScreen,
       MonitorStatisticsDaily,
+      ErrorSolution,
     ]),
   ],
   controllers: [MonitorController],
-  providers: [MonitorDataService, MonitorQueryService],
+  providers: [MonitorDataService, MonitorQueryService, ErrorSolutionService, GptAnalysisService],
 })
 export class ErrorReportModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
