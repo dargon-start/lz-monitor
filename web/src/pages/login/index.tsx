@@ -47,15 +47,15 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#ecf0f3] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--neumorphism-bg)] p-4">
       <div
-        className="flex w-full max-w-5xl min-h-[650px] bg-[#ecf0f3] rounded-3xl overflow-hidden"
-        style={{ boxShadow: '10px 10px 10px #d1d9e6, -10px -10px 10px #f9f9f9' }}
+        className="flex w-full max-w-5xl min-h-[650px] bg-[var(--neumorphism-bg)] rounded-3xl overflow-hidden"
+        style={{ boxShadow: '10px 10px 10px var(--neumorphism-shadow-dark), -10px -10px 10px var(--neumorphism-shadow-light)' }}
       >
         {/* Left Side - Login Form */}
         <div className="flex-1 flex flex-col items-center justify-center px-16 py-12 ">
           <div className="w-full max-w-md">
-            <h2 className="text-[34px] font-bold leading-[3] text-[#181818] text-center mb-16">
+            <h2 className="text-[34px] font-bold leading-[3] text-[var(--ant-color-primary-text)] text-center mb-16">
               Welcome Back !
             </h2>
 
@@ -109,7 +109,7 @@ export default function Login() {
         </div>
 
         {/* Right Side - Sign Up Section */}
-        <div className="flex-1 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 flex flex-col items-center justify-center px-16 py-12 text-white relative overflow-hidden">
+        <div className="flex-1 bg-gradient-to-br from-[var(--ant-color-primary)] via-[var(--ant-color-primary-hover)] to-[var(--ant-color-primary)] flex flex-col items-center justify-center px-16 py-12 text-white relative overflow-hidden">
           {/* Wave SVG Decoration */}
           <svg
             className="absolute top-0 left-0 w-full h-full opacity-10"
