@@ -30,7 +30,8 @@ export class MonitorQueryService {
   ) {}
 
   /**
-   * 查询错误列表
+   * 查询错误列表 (统一查询 JS错误、HTTP错误、白屏错误)
+   * 注意: TypeORM 的 QueryBuilder 不支持 UNION 操作,因此使用原生 SQL
    */
   async findErrors(query: any = {}) {
     const {
@@ -51,64 +52,180 @@ export class MonitorQueryService {
       message,
     } = query;
 
-    const queryBuilder =
-      this.monitorErrorRepository.createQueryBuilder('error');
+    // 构建参数对象
+    const params: any = {};
+    const conditions: string[] = [];
 
-    // 条件过滤
+    // 公共过滤条件
     if (apiKey) {
-      queryBuilder.andWhere('error.apiKey = :apiKey', { apiKey });
-    }
-    if (errorType) {
-      queryBuilder.andWhere('error.errorType = :errorType', { errorType });
+      params.apiKey = apiKey;
+      conditions.push('api_key = :apiKey');
     }
     if (userId) {
-      queryBuilder.andWhere('error.userId = :userId', { userId });
+      params.userId = userId;
+      conditions.push('user_id = :userId');
     }
     if (pageUrl) {
-      queryBuilder.andWhere('error.pageUrl LIKE :pageUrl', {
-        pageUrl: `%${pageUrl}%`,
-      });
-    }
-    if (message) {
-      queryBuilder.andWhere('error.message LIKE :message', {
-        message: `%${message}%`,
-      });
-    }
-    if (fileName) {
-      queryBuilder.andWhere('error.fileName LIKE :fileName', {
-        fileName: `%${fileName}%`,
-      });
+      params.pageUrl = `%${pageUrl}%`;
+      conditions.push('page_url LIKE :pageUrl');
     }
     if (browser) {
-      queryBuilder.andWhere('error.browser = :browser', { browser });
+      params.browser = browser;
+      conditions.push('browser = :browser');
     }
     if (os) {
-      queryBuilder.andWhere('error.os = :os', { os });
+      params.os = os;
+      conditions.push('os = :os');
     }
     if (deviceType) {
-      queryBuilder.andWhere('error.deviceType = :deviceType', { deviceType });
+      params.deviceType = deviceType;
+      conditions.push('device_type = :deviceType');
     }
 
-    // 时间范围
+    // 时间范围条件
     if (startTime && endTime) {
-      queryBuilder.andWhere('error.time BETWEEN :startTime AND :endTime', {
-        startTime,
-        endTime,
-      });
+      params.startTime = startTime;
+      params.endTime = endTime;
+      conditions.push('time BETWEEN :startTime AND :endTime');
     } else if (startTime) {
-      queryBuilder.andWhere('error.time >= :startTime', { startTime });
+      params.startTime = startTime;
+      conditions.push('time >= :startTime');
     } else if (endTime) {
-      queryBuilder.andWhere('error.time <= :endTime', { endTime });
+      params.endTime = endTime;
+      conditions.push('time <= :endTime');
     }
 
-    // 排序
-    queryBuilder.orderBy(`error.${sortBy}`, sortOrder);
+    const whereClause =
+      conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 
-    // 分页
+    // 构建 UNION 查询 (使用数据库实际字段名: snake_case)
+    const unionQuery = `
+      SELECT 
+        id,
+        'js_error' as errorSource,
+        api_key as apiKey,
+        time,
+        page_url as pageUrl,
+        user_id as userId,
+        browser,
+        os,
+        device_type as deviceType,
+        uuid,
+        message,
+        error_type as errorType,
+        file_name as fileName,
+        line,
+        \`column\`,
+        stack,
+        name,
+        NULL as url,
+        NULL as method,
+        NULL as httpStatus,
+        NULL as elapsedTime,
+        NULL as emptyPoints,
+        NULL as skeletonData
+      FROM monitor_errors
+      ${whereClause}
+      ${message ? (conditions.length > 0 ? 'AND' : 'WHERE') + ' message LIKE :message' : ''}
+      ${fileName ? (conditions.length > 0 || message ? 'AND' : 'WHERE') + ' file_name LIKE :fileName' : ''}
+      ${errorType ? (conditions.length > 0 || message || fileName ? 'AND' : 'WHERE') + ' error_type = :errorType' : ''}
+      
+      UNION ALL
+      
+      SELECT 
+        id,
+        'http_error' as errorSource,
+        api_key as apiKey,
+        time,
+        page_url as pageUrl,
+        user_id as userId,
+        browser,
+        os,
+        device_type as deviceType,
+        uuid,
+        message,
+        NULL as errorType,
+        NULL as fileName,
+        NULL as line,
+        NULL as \`column\`,
+        NULL as stack,
+        NULL as name,
+        url,
+        method,
+        http_status as httpStatus,
+        elapsed_time as elapsedTime,
+        NULL as emptyPoints,
+        NULL as skeletonData
+      FROM monitor_http_requests
+      WHERE status = 'error'
+      ${conditions.length > 0 ? 'AND ' + conditions.join(' AND ') : ''}
+      ${message ? 'AND message LIKE :message' : ''}
+      
+      UNION ALL
+      
+      SELECT 
+        id,
+        'white_screen' as errorSource,
+        api_key as apiKey,
+        time,
+        page_url as pageUrl,
+        user_id as userId,
+        browser,
+        os,
+        device_type as deviceType,
+        uuid,
+        NULL as message,
+        NULL as errorType,
+        NULL as fileName,
+        NULL as line,
+        NULL as \`column\`,
+        NULL as stack,
+        NULL as name,
+        NULL as url,
+        NULL as method,
+        NULL as httpStatus,
+        NULL as elapsedTime,
+        empty_points as emptyPoints,
+        skeleton_data as skeletonData
+      FROM monitor_white_screens
+      WHERE status = 'error'
+      ${conditions.length > 0 ? 'AND ' + conditions.join(' AND ') : ''}
+    `;
+
+    // 添加特定条件的参数
+    if (message) {
+      params.message = `%${message}%`;
+    }
+    if (fileName) {
+      params.fileName = `%${fileName}%`;
+    }
+    if (errorType) {
+      params.errorType = errorType;
+    }
+
+    // 先查询总数
+    const countQuery = `SELECT COUNT(*) as total FROM (${unionQuery}) as combined`;
+    const countResult = await this.monitorErrorRepository.query(
+      countQuery,
+      Object.values(params),
+    );
+    const total = parseInt(countResult[0]?.total || '0');
+
+    // 添加排序和分页
+    const validSortBy = ['time', 'id'].includes(sortBy) ? sortBy : 'time';
+    const validSortOrder = sortOrder.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
     const skip = (page - 1) * pageSize;
-    queryBuilder.skip(skip).take(pageSize);
 
-    const [data, total] = await queryBuilder.getManyAndCount();
+    const finalQuery = `
+      SELECT * FROM (${unionQuery}) as combined
+      ORDER BY ${validSortBy} ${validSortOrder}
+      LIMIT ${pageSize} OFFSET ${skip}
+    `;
+
+    const data = await this.monitorErrorRepository.query(
+      finalQuery,
+      Object.values(params),
+    );
 
     return {
       data,
@@ -118,7 +235,6 @@ export class MonitorQueryService {
       totalPages: Math.ceil(total / pageSize),
     };
   }
-
   /**
    * 根据ID查询单条错误
    */
